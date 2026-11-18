@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visit & Support — Hearth & Grain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --oat: #F3EDE4; --walnut: #4A3426; --moss: #5E6B4A; --clay: #B5654A;
+      --oxblood: #6B2A2F; --chrome: #C9CCCF; --ink: #1E1A17; --paper: #FAF8F5;
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --font-serif: 'Fraunces', serif; --font-sans: 'Inter', sans-serif;
+      --header-h: 80px; --radius: 24px;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-sans); background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+    img { display: block; max-width: 100%; height: auto; }
+    button { font-family: inherit; border: none; background: none; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1440px, 92vw); margin-inline: auto; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; border-radius: 100px; font-size: 0.9rem; font-weight: 500; transition: all 0.5s var(--ease-expo); border: 1px solid transparent; cursor: pointer; }
+    .btn-primary { background: var(--walnut); color: var(--oat); }
+    .btn-primary:hover { background: var(--oxblood); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(74,52,38,0.2); }
+    .btn-outline { border-color: var(--walnut); color: var(--walnut); background: transparent; }
+    .btn-outline:hover { background: var(--walnut); color: var(--oat); }
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--moss); font-weight: 600; margin-bottom: 0.75rem; }
+    .section-heading { font-family: var(--font-serif); font-size: clamp(1.8rem, 3.5vw, 3rem); line-height: 1.1; color: var(--walnut); font-weight: 400; }
+
+    /* HEADER */
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 0 2rem; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; background: rgba(250,248,245,0.94); backdrop-filter: blur(20px); box-shadow: 0 1px 0 rgba(74,52,38,0.08); }
+    .logo { font-family: var(--font-serif); font-size: 1.5rem; color: var(--walnut); font-weight: 500; }
+    .logo span { color: var(--clay); }
+    .header-nav { display: flex; gap: 2.5rem; font-size: 0.85rem; font-weight: 500; color: var(--walnut); }
+    .header-nav a { position: relative; padding: 0.25rem 0; }
+    .header-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--clay); transition: width 0.4s var(--ease-expo); }
+    .header-nav a:hover::after, .header-nav a.is-active::after { width: 100%; }
+    .header-actions { display: flex; gap: 1.5rem; align-items: center; }
+    .header-actions button { color: var(--walnut); transition: transform 0.3s var(--ease-expo); }
+    .header-actions button:hover { transform: translateY(-2px); }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--clay); color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+    /* 1. HERO */
+    .support-hero { padding: calc(var(--header-h) + 3rem) 0 3rem; background: var(--oat); text-align: center; }
+    .support-hero h1 { margin-bottom: 1rem; }
+    .support-hero p { font-size: 1rem; color: #5a4a3e; max-width: 520px; margin: 0 auto 2rem; line-height: 1.7; }
+    .support-search { max-width: 560px; margin: 0 auto; display: flex; gap: 0.5rem; }
+    .support-search input { flex: 1; padding: 1rem 1.5rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.15); background: var(--paper); font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+    .support-search input:focus { border-color: var(--clay); }
+    .support-search button { padding: 1rem 2rem; border-radius: 100px; background: var(--walnut); color: var(--oat); font-size: 0.85rem; font-weight: 500; }
+
+    /* 2. CONTACT CARDS */
+    .contact-cards { padding: 4rem 0; background: var(--paper); }
+    .contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    .contact-card { padding: 2rem 1.5rem; border-radius: var(--radius); background: var(--oat); border: 1px solid rgba(74,52,38,0.06); transition: transform 0.4s var(--ease-expo); }
+    .contact-card:hover { transform: translateY(-4px); }
+    .contact-card__icon { width: 44px; height: 44px; border-radius: 50%; background: var(--walnut); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+    .contact-card__icon svg { width: 20px; height: 20px; stroke: var(--oat); fill: none; stroke-width: 1.5; }
+    .contact-card h3 { font-family: var(--font-serif); font-size: 1.1rem; color: var(--walnut); margin-bottom: 0.4rem; }
+    .contact-card p { font-size: 0.8rem; color: #6b5d52; line-height: 1.6; margin-bottom: 0.5rem; }
+    .contact-card__hours { font-size: 0.7rem; color: var(--clay); font-weight: 500; }
+
+    /* 3. VISIT */
+    .visit { padding: 4rem 0; background: var(--oat); }
+    .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 2.5rem; }
+    .visit-map { border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; background: #d9d0c5; position: relative; }
+    .visit-map img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+    .visit-map__pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); }
+    .visit-map__pin svg { width: 40px; height: 40px; fill: var(--clay); }
+    .visit-copy h2 { margin-bottom: 1rem; }
+    .visit-copy p { font-size: 0.95rem; color: #5a4a3e; line-height: 1.8; margin-bottom: 1.5rem; }
+    .visit-details { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .visit-detail { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: #5a4a3e; }
+    .visit-detail svg { width: 16px; height: 16px; stroke: var(--moss); fill: none; stroke-width: 1.5; flex-shrink: 0; margin-top: 2px; }
+    .visit-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    /* 4. DELIVERY GUIDE */
+    .delivery { padding: 4rem 0; background: var(--paper); }
+    .delivery-table-wrap { overflow-x: auto; margin-top: 2.5rem; }
+    .delivery-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .delivery-table th, .delivery-table td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid rgba(74,52,38,0.1); }
+    .delivery-table th { font-family: var(--font-serif); font-size: 0.95rem; color: var(--walnut); font-weight: 400; background: var(--oat); }
+    .delivery-table td:first-child { font-weight: 500; color: var(--walnut); }
+    .delivery-estimator { background: var(--oat); border-radius: 16px; padding: 1.5rem; margin-top: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .delivery-estimator input { flex: 1; min-width: 180px; padding: 0.75rem 1rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.15); background: var(--paper); font-family: inherit; font-size: 0.85rem; outline: none; }
+    .delivery-estimator input:focus { border-color: var(--clay); }
+    .delivery-estimator button { padding: 0.75rem 1.5rem; border-radius: 100px; background: var(--walnut); color: var(--oat); font-size: 0.8rem; font-weight: 500; }
+    .delivery-note { font-size: 0.75rem; color: #9a8c82; margin-top: 0.75rem; }
+
+    /* 5. RETURNS PROMISE */
+    .returns { padding: 4rem 0; background: var(--oat); }
+    .returns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2.5rem; align-items: start; }
+    .returns-copy h3 { font-family: var(--font-serif); font-size: 1.4rem; color: var(--walnut); margin-bottom: 0.75rem; }
+    .returns-copy p { font-size: 0.9rem; color: #5a4a3e; line-height: 1.8; margin-bottom: 1rem; }
+    .returns-timeline { display: flex; flex-direction: column; gap: 1.25rem; }
+    .returns-step { display: flex; gap: 1rem; }
+    .returns-step__num { width: 32px; height: 32px; border-radius: 50%; background: var(--clay); color: var(--oat); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; flex-shrink: 0; }
+    .returns-step h4 { font-size: 0.9rem; color: var(--walnut); margin-bottom: 0.2rem; }
+    .returns-step p { font-size: 0.8rem; color: #6b5d52; line-height: 1.6; }
+    .returns-exceptions { background: var(--paper); border-radius: 16px; padding: 1.5rem; margin-top: 1.5rem; }
+    .returns-exceptions h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--oxblood); margin-bottom: 0.75rem; }
+    .returns-exceptions ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .returns-exceptions li { font-size: 0.8rem; color: #6b5d52; padding-left: 1.25rem; position: relative; }
+    .returns-exceptions li::before { content: '—'; position: absolute; left: 0; color: var(--clay); }
+
+    /* 6. CARE HUB */
+    .care { padding: 4rem 0; background: var(--paper); }
+    .care-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    .care-card { border-radius: var(--radius); overflow: hidden; background: var(--oat); }
+    .care-card__image { aspect-ratio: 4/3; overflow: hidden; }
+    .care-card__image img { width: 100%; height: 100%; object-fit: cover; }
+    .care-card__info { padding: 1.25rem; }
+    .care-card__info h4 { font-family: var(--font-serif); font-size: 1.05rem; color: var(--walnut); margin-bottom: 0.4rem; }
+    .care-card__info p { font-size: 0.78rem; color: #6b5d52; line-height: 1.6; margin-bottom: 0.75rem; }
+    .care-card__link { font-size: 0.75rem; color: var(--clay); font-weight: 500; cursor: pointer; }
+    .care-card__link:hover { text-decoration: underline; }
+
+    /* 7. FAQ */
+    .faq { padding: 4rem 0; background: var(--oat); }
+    .faq-list { max-width: 800px; margin: 2.5rem auto 0; }
+    .faq-item { border-bottom: 1px solid rgba(74,52,38,0.1); }
+    .faq-question { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.15rem 0; font-size: 0.9rem; font-weight: 500; color: var(--walnut); text-align: left; cursor: pointer; }
+    .faq-question svg { width: 16px; height: 16px; transition: transform 0.3s; flex-shrink: 0; }
+    .faq-item.is-open .faq-question svg { transform: rotate(45deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease-expo); }
+    .faq-answer p { padding-bottom: 1.15rem; font-size: 0.82rem; color: #6b5d52; line-height: 1.7; }
+    .faq-item.is-open .faq-answer { max-height: 200px; }
+
+    /* 8. TRADE */
+    .trade { padding: 4rem 0; background: var(--walnut); color: var(--oat); }
+    .trade .section-heading { color: var(--oat); }
+    .trade .section-label { color: var(--clay); }
+    .trade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2.5rem; align-items: start; }
+    .trade-benefits { display: flex; flex-direction: column; gap: 1rem; }
+    .trade-benefit { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .trade-benefit svg { width: 18px; height: 18px; stroke: var(--clay); fill: none; stroke-width: 1.5; flex-shrink: 0; margin-top: 2px; }
+    .trade-benefit span { font-size: 0.85rem; color: rgba(243,237,228,0.8); line-height: 1.6; }
+    .trade-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .trade-form input, .trade-form select { padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid rgba(243,237,228,0.2); background: transparent; color: var(--oat); font-family: inherit; font-size: 0.85rem; outline: none; }
+    .trade-form input::placeholder { color: rgba(243,237,228,0.4); }
+    .trade-form input:focus, .trade-form select:focus { border-color: var(--clay); }
+    .trade-form button { margin-top: 0.5rem; padding: 0.85rem; border-radius: 100px; background: var(--clay); color: var(--oat); font-weight: 600; font-size: 0.85rem; }
+
+    /* 9. CONTACT FORM */
+    .contact-form-section { padding: 4rem 0; background: var(--paper); }
+    .contact-form-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; margin-top: 2.5rem; }
+    .contact-form-copy h2 { margin-bottom: 1rem; }
+    .contact-form-copy p { font-size: 0.9rem; color: #5a4a3e; line-height: 1.8; margin-bottom: 1rem; }
+    .contact-form-copy .response-time { font-size: 0.8rem; color: var(--clay); font-weight: 500; }
+    .contact-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-form input, .contact-form select, .contact-form textarea { padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid rgba(74,52,38,0.15); background: var(--paper); font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.3s; }
+    .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--clay); }
+    .contact-form textarea { min-height: 100px; resize: vertical; }
+    .contact-form button { padding: 0.85rem; border-radius: 100px; background: var(--walnut); color: var(--oat); font-weight: 600; font-size: 0.85rem; }
+
+    /* 10. CLOSING */
+    .closing-reassurance { padding: 3rem 0; background: var(--oat); }
+    .closing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center; }
+    .closing-item h4 { font-family: var(--font-serif); font-size: 1.1rem; color: var(--walnut); margin-bottom: 0.4rem; }
+    .closing-item p { font-size: 0.8rem; color: #6b5d52; line-height: 1.6; }
+
+    /* FOOTER */
+    .site-footer { padding: 3rem 0 2rem; background: var(--paper); border-top: 1px solid rgba(74,52,38,0.08); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2rem; }
+    .footer-brand p { font-size: 0.8rem; color: #6b5d52; margin-top: 0.75rem; max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--walnut); margin-bottom: 1rem; font-weight: 600; }
+    .footer-col a { display: block; font-size: 0.8rem; color: #6b5d52; margin-bottom: 0.5rem; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--clay); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(74,52,38,0.08); font-size: 0.7rem; color: #9a8c82; flex-wrap: wrap; gap: 1rem; }
+
+    /* SWATCH DRAWER */
+    .swatch-drawer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: var(--walnut); color: var(--oat); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; transform: translateY(100%); transition: transform 0.6s var(--ease-expo); box-shadow: 0 -8px 40px rgba(0,0,0,0.3); flex-wrap: wrap; gap: 0.75rem; }
+    .swatch-drawer.is-visible { transform: translateY(0); }
+    .swatch-drawer__items { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+    .swatch-chip { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--oat); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+    .swatch-drawer__cta { background: var(--oat); color: var(--walnut); padding: 0.65rem 1.75rem; border-radius: 100px; font-weight: 600; font-size: 0.8rem; }
+    .swatch-drawer__close { color: var(--oat); font-size: 1.4rem; opacity: 0.6; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo); }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+
+    @media (max-width: 1024px) {
+      .contact-grid { grid-template-columns: repeat(2, 1fr); }
+      .visit-grid, .returns-grid, .trade-grid, .contact-form-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .care-grid { grid-template-columns: repeat(2, 1fr); }
+      .closing-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .header-nav { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .contact-grid, .care-grid { grid-template-columns: 1fr; }
+      .support-search { flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="index.html" class="logo">Hearth <span>&</span> Grain</a>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="atelier.html">Atelier</a>
+      <a href="story.html">Story & Craft</a>
+      <a href="visit.html" class="is-active">Visit & Support</a>
+    </nav>
+    <div class="header-actions">
+      <button aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+      <button aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <button aria-label="Cart" style="position:relative;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count">0</span></button>
+    </div>
+  </header>
+
+  <!-- 1. HERO -->
+  <section class="support-hero">
+    <div class="container">
+      <p class="section-label reveal">Visit & Support</p>
+      <h1 class="section-heading reveal reveal-d1">Questions answered,<br>before you have to ask.</h1>
+      <p class="reveal reveal-d2">Find delivery dates, returns, care and contact options in one place. Search below, or reach a real person.</p>
+      <div class="support-search reveal reveal-d2">
+        <input type="text" placeholder="Search delivery, returns, fabrics, assembly…" aria-label="Search support topics">
+        <button onclick="alert('Search mock — wire to site search.')">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. CONTACT CARDS -->
+  <section class="contact-cards">
+    <div class="container">
+      <p class="section-label reveal">Choose how to reach us</p>
+      <h2 class="section-heading reveal reveal-d1">Four ways to talk<br>to a person.</h2>
+      <div class="contact-grid">
+        <div class="contact-card reveal">
+          <div class="contact-card__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>Chat with a designer</h3>
+          <p>Fast answers on sizes, fabrics, and fit.</p>
+          <div class="contact-card__hours">Mon–Sat, 9am–6pm EST</div>
+        </div>
+        <div class="contact-card reveal reveal-d1">
+          <div class="contact-card__icon"><svg viewBox="0 0 24 24"><path d="M15 10l4.55-2.27A1 1 0 0 1 21 8.6v6.8a1 1 0 0 1-1.45.87L15 14"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></div>
+          <h3>Book a video consult</h3>
+          <p>15 minutes, free, no pressure. Bring your room and your questions.</p>
+          <div class="contact-card__hours">Same-day slots available</div>
+        </div>
+        <div class="contact-card reveal reveal-d2">
+          <div class="contact-card__icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <h3>WhatsApp or call</h3>
+          <p>For orders and delivery questions. Real people, not bots.</p>
+          <div class="contact-card__hours">+1 (555) 012-3456</div>
+        </div>
+        <div class="contact-card reveal reveal-d3">
+          <div class="contact-card__icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></div>
+          <h3>Email</h3>
+          <p>For detailed questions, trade enquiries, and repair requests.</p>
+          <div class="contact-card__hours">hello@hearthandgrain.com · replies within 4 business hours</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. VISIT -->
+  <section class="visit">
+    <div class="container">
+      <div class="visit-grid">
+        <div class="visit-map reveal">
+          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop" alt="Showroom exterior">
+          <div class="visit-map__pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        </div>
+        <div class="visit-copy reveal reveal-d1">
+          <p class="section-label">Visit us (or visit virtually)</p>
+          <h2 class="section-heading">Sit on it. Touch it.<br>Stay a while.</h2>
+          <p>Our showroom has every collection set out in real rooms, with fabric walls and a designer on hand. Appointments are welcome, and so are walk-ins.</p>
+          <div class="visit-details">
+            <div class="visit-detail"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 1420 Woodward Ave, Detroit, MI 48226</div>
+            <div class="visit-detail"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Mon–Sat 10am–6pm · Sun 12–5pm</div>
+            <div class="visit-detail"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Free parking behind the building · Step-free access</div>
+          </div>
+          <div class="visit-actions">
+            <button class="btn btn-primary" onclick="alert('Directions would open Maps. (Mock)')">Get directions</button>
+            <button class="btn btn-outline" onclick="alert('Booking flow — wire to Calendly. (Mock)')">Book a visit</button>
+            <button class="btn btn-outline" onclick="alert('360° virtual tour would launch here. (Mock)')">Take the virtual tour</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DELIVERY GUIDE -->
+  <section class="delivery">
+    <div class="container">
+      <p class="section-label reveal">Delivery guide</p>
+      <h2 class="section-heading reveal reveal-d1">Know the date.<br>Know the cost.</h2>
+      <p class="reveal reveal-d2" style="font-size:0.9rem; color:#5a4a3e; max-width:560px; margin-top:0.75rem;">We show your delivery date before you pay, and message you at every step. No surprise fees, no vague windows.</p>
+      <div class="delivery-table-wrap reveal">
+        <table class="delivery-table">
+          <thead><tr><th>Service level</th><th>What happens</th><th>Price</th></tr></thead>
+          <tbody>
+            <tr><td>Standard delivery</td><td>Two people deliver to your first room past the front door</td><td>Included</td></tr>
+            <tr><td>Room of choice</td><td>Placed in the room you choose, up to the stairs limit</td><td>+$80</td></tr>
+            <tr><td>White glove</td><td>Placement, assembly, packaging removal, old-piece removal</td><td>+$180</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="delivery-estimator reveal">
+        <input type="text" placeholder="Enter your postcode to see your delivery window" id="deliveryPostcode">
+        <button onclick="document.getElementById('deliveryPostcode').value='';alert('Delivery estimate: 12–18 Feb · Standard included · White glove +$180 available')">Check delivery</button>
+      </div>
+      <p class="delivery-note reveal">Made-to-order pieces show an honest range that reflects current production times. We update it as those change. Doorway-fit checks are available on every product page.</p>
+    </div>
+  </section>
+
+  <!-- 5. RETURNS PROMISE -->
+  <section class="returns">
+    <div class="container">
+      <p class="section-label reveal">Returns promise</p>
+      <h2 class="section-heading reveal reveal-d1">Plain words.<br>No asterisks.</h2>
+      <div class="returns-grid">
+        <div class="returns-copy reveal">
+          <h3>Changed your mind?</h3>
+          <p>You have 14 days from delivery to return a standard piece for a full refund. We will collect it. You do not need to keep the box.</p>
+          <p>Custom and made-to-order pieces are non-returnable—that is why swatches and the design consult exist. Use them before you commit.</p>
+          <div class="returns-timeline">
+            <div class="returns-step"><div class="returns-step__num">1</div><div><h4>Tell us within 14 days</h4><p>Email or call. We will ask for photos and your order number.</p></div></div>
+            <div class="returns-step"><div class="returns-step__num">2</div><div><h4>We arrange collection</h4><p>We book a courier and confirm the date with you. No packing required.</p></div></div>
+            <div class="returns-step"><div class="returns-step__num">3</div><div><h4>Refund within 5 days</h4><p>Once inspected, we refund to your original payment method.</p></div></div>
+          </div>
+          <div class="returns-exceptions">
+            <h4>What is not returnable</h4>
+            <ul>
+              <li>Custom or made-to-order pieces (non-returnable unless defective)</li>
+              <li>Clearance or final-sale items</li>
+              <li>Items damaged by misuse or improper assembly</li>
+              <li>Natural variations in wood grain or stone (not defects)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal reveal-d1">
+          <div style="border-radius:var(--radius); overflow:hidden; aspect-ratio:4/3;">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop" alt="Delivery and returns" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <p style="font-size:0.8rem; color:#9a8c82; margin-top:1rem;">If something arrives damaged or not as specified, we fix it. Report within 48 hours with photos. Read the full policy on request—or ask us to email it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CARE HUB -->
+  <section class="care">
+    <div class="container">
+      <p class="section-label reveal">Care & repair</p>
+      <h2 class="section-heading reveal reveal-d1">Keep it going.</h2>
+      <p class="reveal reveal-d2" style="font-size:0.9rem; color:#5a4a3e; max-width:560px; margin-top:0.75rem;">Spare covers. Replaceable cushions. Refinishing for wood. The piece is not finished when it leaves the workshop.</p>
+      <div class="care-grid">
+        <div class="care-card reveal">
+          <div class="care-card__image"><img src="https://images.unsplash.com/photo-1611021061285-8c7c1b0b0c0d?w=400&q=80&auto=format&fit=crop" alt="Wood care"></div>
+          <div class="care-card__info"><h4>Wood</h4><p>Re-oil every 6–12 months. Wipe with a damp cloth, avoid harsh chemicals.</p><span class="care-card__link" onclick="alert('Wood care guide — wire to downloadable PDF.')">Read guide →</span></div>
+        </div>
+        <div class="care-card reveal reveal-d1">
+          <div class="care-card__image"><img src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&q=80&auto=format&fit=crop" alt="Fabric care"></div>
+          <div class="care-card__info"><h4>Fabric</h4><p>Vacuum weekly with a soft brush. Removable covers machine wash cold.</p><span class="care-card__link" onclick="alert('Fabric care guide — wire to downloadable PDF.')">Read guide →</span></div>
+        </div>
+        <div class="care-card reveal reveal-d2">
+          <div class="care-card__image"><img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400&q=80&auto=format&fit=crop" alt="Stone care"></div>
+          <div class="care-card__info"><h4>Stone</h4><p>Wipe spills immediately. Use a pH-neutral cleaner. Avoid acidic products.</p><span class="care-card__link" onclick="alert('Stone care guide — wire to downloadable PDF.')">Read guide →</span></div>
+        </div>
+        <div class="care-card reveal reveal-d3">
+          <div class="care-card__image"><img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?w=400&q=80&auto=format&fit=crop" alt="Metal care"></div>
+          <div class="care-card__info"><h4>Metal</h4><p>Chrome: wipe with a soft cloth. Brass: polish with a specialist pad to restore finish.</p><span class="care-card__link" onclick="alert('Metal care guide — wire to downloadable PDF.')">Read guide →</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FAQ -->
+  <section class="faq">
+    <div class="container">
+      <p class="section-label reveal">Frequently asked</p>
+      <h2 class="section-heading reveal reveal-d1">The questions we hear<br>most often.</h2>
+      <div class="faq-list">
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">When will my piece arrive?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Your delivery window is shown on the product page and confirmed before you pay. Made-to-order pieces take 6–8 weeks. We message you when production starts, when it ships, and when it is out for delivery.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is assembly included?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Standard delivery includes placement in your first room. White glove includes full assembly and packaging removal. If you choose self-assembly, printable instructions and a video are available on the product page.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Can I return a custom piece?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Custom and made-to-order pieces are non-returnable unless defective. That is why we send free swatches and offer a design consult before you commit. Use them. If something arrives damaged, we fix it.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">What if it does not fit through my door?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Every product page shows a doorway-fit check. If you are unsure, measure your doorway and stairwell before ordering, or book a 15-minute video consult and we will help you check. We can also build in modules if needed.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">How do I care for my piece?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Care guides for wood, fabric, stone, and metal are linked above. Every swatch kit includes a care card. If you lose it, email us and we will send a replacement.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Do you offer trade pricing?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Yes. Interior designers, architects, and developers can apply for the trade programme above. Volume pricing, spec sheets, and dedicated support are available.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">What if something arrives damaged?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Report it within 48 hours with photos. We will arrange a repair, replacement, or refund. Visible damage should be noted on the delivery receipt if possible. We cover return shipping for defective items.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. TRADE -->
+  <section class="trade">
+    <div class="container">
+      <p class="section-label reveal">Trade programme</p>
+      <h2 class="section-heading reveal reveal-d1">For designers<br>and developers.</h2>
+      <div class="trade-grid">
+        <div class="trade-benefits reveal">
+          <div class="trade-benefit"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Exclusive trade pricing across the full collection</span></div>
+          <div class="trade-benefit"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Priority access to new collections and limited runs</span></div>
+          <div class="trade-benefit"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Complimentary timber, fabric, and stone samples</span></div>
+          <div class="trade-benefit"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Dedicated support for quoting and specification</span></div>
+          <div class="trade-benefit"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Custom and bespoke options tailored to your brief</span></div>
+        </div>
+        <form class="trade-form reveal reveal-d1" onsubmit="event.preventDefault(); alert('Trade application received. (Mock — wire to CRM.)')">
+          <input type="text" placeholder="Name" required>
+          <input type="email" placeholder="Email" required>
+          <input type="text" placeholder="Company / studio name">
+          <input type="text" placeholder="Website or portfolio URL">
+          <select><option>Interior designer</option><option>Architect</option><option>Developer</option><option>Stylist</option><option>Other</option></select>
+          <button type="submit">Apply for trade access</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CONTACT FORM -->
+  <section class="contact-form-section">
+    <div class="container">
+      <div class="contact-form-grid">
+        <div class="contact-form-copy reveal">
+          <p class="section-label">Still have a question?</p>
+          <h2 class="section-heading">Send us a note.</h2>
+          <p>Tell us what you are trying to figure out. Sizes, fabrics, delivery, a repair—or something we have not thought of. A real person will read it and reply.</p>
+          <p class="response-time">We reply within 4 business hours, Mon–Sat.</p>
+        </div>
+        <form class="contact-form reveal reveal-d1" onsubmit="event.preventDefault(); alert('Message sent. (Mock — wire to support inbox.)')">
+          <input type="text" placeholder="Name" required>
+          <input type="email" placeholder="Email" required>
+          <select><option>General question</option><option>Delivery & tracking</option><option>Returns</option><option>Care & repair</option><option>Trade enquiry</option><option>Something else</option></select>
+          <textarea placeholder="Tell us what you need help with." required></textarea>
+          <button type="submit">Send message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CLOSING -->
+  <section class="closing-reassurance">
+    <div class="container">
+      <div class="closing-grid">
+        <div class="closing-item reveal"><h4>Delivery</h4><p>Date shown before you pay. No surprise fees.</p></div>
+        <div class="closing-item reveal reveal-d1"><h4>Swatches</h4><p>Free fabric and wood samples. Feel it before you commit.</p></div>
+        <div class="closing-item reveal reveal-d2"><h4>Returns</h4><p>14 days on standard pieces. Plain words, no asterisks.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Hearth <span>&</span> Grain</div><p>Furniture for homes that are lived in. Warm woods, deep seating, honest materials.</p></div>
+        <div class="footer-col"><h4>Shop</h4><a href="shop.html">Living</a><a href="shop.html">Dining</a><a href="shop.html">Bedroom</a><a href="shop.html">Small Spaces</a></div>
+        <div class="footer-col"><h4>Atelier</h4><a href="atelier.html">Configurator</a><a href="atelier.html">Room Planner</a><a href="atelier.html">Style Quiz</a><a href="atelier.html">Book a Consult</a></div>
+        <div class="footer-col"><h4>Support</h4><a href="#">Delivery & Returns</a><a href="#">Care & Repair</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Hearth & Grain.</span><span>WCAG 2.2 AA · Carbon-neutral shipping · FSC-certified timber (verify)</span></div>
+    </div>
+  </footer>
+
+  <!-- SWATCH DRAWER -->
+  <div class="swatch-drawer" id="swatchDrawer">
+    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;"><span style="font-size:0.75rem; opacity:0.7;">Your swatch drawer</span><div class="swatch-drawer__items" id="swatchItems"></div></div>
+    <div style="display:flex; align-items:center; gap:1rem;"><button class="swatch-drawer__cta" onclick="alert('Swatch kit request — wire to fulfilment.')">Order free swatches →</button><button class="swatch-drawer__close" id="swatchClose">×</button></div>
+  </div>
+
+  <script>
+    // REVEAL
+    const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); }), { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // FAQ
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('is-open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('is-open'));
+      if (!wasOpen) item.classList.add('is-open');
+    }
+
+    // SWATCH DRAWER
+    const drawer = document.getElementById('swatchDrawer'), items = document.getElementById('swatchItems');
+    let swatches = [];
+    function addSwatch(name, color) {
+      if (swatches.length >= 6) { alert('Maximum 6 swatches.'); return; }
+      if (swatches.find(s => s.name === name)) return;
+      swatches.push({ name, color }); renderSwatches(); drawer.classList.add('is-visible');
+    }
+    function renderSwatches() {
+      items.innerHTML = swatches.map((s, i) => `<div class="swatch-chip" style="background:${s.color}; color:${isLight(s.color) ? '#1E1A17' : '#F3EDE4'};" title="${s.name}" onclick="removeSwatch(${i})">${s.name.slice(0, 2)}</div>`).join('');
+    }
+    function removeSwatch(i) { swatches.splice(i, 1); renderSwatches(); if (!swatches.length) drawer.classList.remove('is-visible'); }
+    function isLight(hex) { const c = hex.replace('#', ''); const r = parseInt(c.substr(0, 2), 16), g = parseInt(c.substr(2, 2), 16), b = parseInt(c.substr(4, 2), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 128; }
+    document.getElementById('swatchClose').addEventListener('click', () => drawer.classList.remove('is-visible'));
+
+    console.log('Hearth & Grain — Visit & Support page loaded.');
+  </script>
+</body>
+</html>

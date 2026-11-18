@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Atelier — Hearth & Grain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --oat: #F3EDE4; --walnut: #4A3426; --moss: #5E6B4A; --clay: #B5654A;
+      --oxblood: #6B2A2F; --chrome: #C9CCCF; --ink: #1E1A17; --paper: #FAF8F5;
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --font-serif: 'Fraunces', serif; --font-sans: 'Inter', sans-serif;
+      --header-h: 80px; --radius: 24px;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-sans); background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+    img { display: block; max-width: 100%; height: auto; }
+    button { font-family: inherit; border: none; background: none; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1440px, 92vw); margin-inline: auto; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; border-radius: 100px; font-size: 0.9rem; font-weight: 500; transition: all 0.5s var(--ease-expo); border: 1px solid transparent; cursor: pointer; }
+    .btn-primary { background: var(--walnut); color: var(--oat); }
+    .btn-primary:hover { background: var(--oxblood); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(74,52,38,0.2); }
+    .btn-outline { border-color: var(--walnut); color: var(--walnut); background: transparent; }
+    .btn-outline:hover { background: var(--walnut); color: var(--oat); }
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--moss); font-weight: 600; margin-bottom: 0.75rem; }
+    .section-heading { font-family: var(--font-serif); font-size: clamp(1.8rem, 3.5vw, 3rem); line-height: 1.1; color: var(--walnut); font-weight: 400; }
+
+    /* HEADER */
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 0 2rem; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; background: rgba(250,248,245,0.94); backdrop-filter: blur(20px); box-shadow: 0 1px 0 rgba(74,52,38,0.08); }
+    .logo { font-family: var(--font-serif); font-size: 1.5rem; color: var(--walnut); font-weight: 500; }
+    .logo span { color: var(--clay); }
+    .header-nav { display: flex; gap: 2.5rem; font-size: 0.85rem; font-weight: 500; color: var(--walnut); }
+    .header-nav a { position: relative; padding: 0.25rem 0; }
+    .header-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--clay); transition: width 0.4s var(--ease-expo); }
+    .header-nav a:hover::after, .header-nav a.is-active::after { width: 100%; }
+    .header-actions { display: flex; gap: 1.5rem; align-items: center; }
+    .header-actions button { color: var(--walnut); transition: transform 0.3s var(--ease-expo); }
+    .header-actions button:hover { transform: translateY(-2px); }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--clay); color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+    /* 1. HERO */
+    .atelier-hero { padding: calc(var(--header-h) + 3rem) 0 4rem; background: var(--oat); overflow: hidden; }
+    .atelier-hero__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .atelier-hero__visual { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; background: #3a2a1f; }
+    .atelier-hero__visual img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.6s var(--ease-expo); }
+    .atelier-hero__swatches { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.75rem; background: rgba(30,26,23,0.6); backdrop-filter: blur(12px); padding: 0.75rem 1.25rem; border-radius: 100px; }
+    .hero-swatch { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(243,237,228,0.4); cursor: pointer; transition: all 0.3s var(--ease-expo); }
+    .hero-swatch:hover, .hero-swatch.is-active { transform: scale(1.2); border-color: var(--clay); box-shadow: 0 0 0 3px rgba(181,101,74,0.3); }
+    .atelier-hero__copy h1 { font-family: var(--font-serif); font-size: clamp(2.5rem, 5vw, 4.2rem); line-height: 1.05; color: var(--walnut); font-weight: 400; margin-bottom: 1.25rem; }
+    .atelier-hero__copy h1 em { font-style: italic; color: var(--clay); }
+    .atelier-hero__copy p { font-size: 1.05rem; color: #5a4a3e; line-height: 1.8; max-width: 460px; margin-bottom: 2rem; }
+    .atelier-hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* 2. HOW IT WORKS */
+    .how-it-works { padding: 5rem 0; background: var(--paper); }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .step-card { position: relative; padding: 2rem 1.5rem; border-radius: var(--radius); background: var(--oat); border: 1px solid rgba(74,52,38,0.06); }
+    .step-card__num { font-family: var(--font-serif); font-size: 2.5rem; color: var(--clay); opacity: 0.4; line-height: 1; margin-bottom: 1rem; }
+    .step-card h3 { font-family: var(--font-serif); font-size: 1.15rem; color: var(--walnut); margin-bottom: 0.5rem; }
+    .step-card p { font-size: 0.85rem; color: #6b5d52; line-height: 1.6; }
+    .step-card::after { content: '→'; position: absolute; right: -1.1rem; top: 50%; transform: translateY(-50%); color: var(--chrome); font-size: 1.2rem; }
+    .step-card:last-child::after { display: none; }
+
+    /* 3. LIVE CONFIGURATOR */
+    .configurator { padding: 5rem 0; background: var(--oat); }
+    .config-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; margin-top: 3rem; }
+    .config-visual { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 1; background: #3a2a1f; }
+    .config-visual img { width: 100%; height: 100%; object-fit: cover; transition: all 0.5s var(--ease-expo); }
+    .config-visual__overlay { position: absolute; bottom: 1rem; left: 1rem; right: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .config-visual__badge { background: rgba(30,26,23,0.7); backdrop-filter: blur(8px); color: var(--oat); font-size: 0.65rem; padding: 0.4rem 1rem; border-radius: 100px; }
+    .config-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+    .config-group__label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--moss); margin-bottom: 0.5rem; font-weight: 600; }
+    .config-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .config-pill { padding: 0.5rem 1.1rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.2); font-size: 0.8rem; color: var(--walnut); cursor: pointer; transition: all 0.3s; }
+    .config-pill:hover, .config-pill.is-active { background: var(--walnut); color: var(--oat); border-color: var(--walnut); }
+    .config-summary { background: var(--paper); border-radius: 16px; padding: 1.5rem; margin-top: 0.5rem; border: 1px solid rgba(74,52,38,0.08); }
+    .config-summary__row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; font-size: 0.85rem; }
+    .config-summary__row:first-child { padding-top: 0; }
+    .config-summary__row span:first-child { color: #6b5d52; }
+    .config-summary__row span:last-child { font-weight: 500; color: var(--walnut); }
+    .config-summary__price { font-family: var(--font-serif); font-size: 1.8rem; color: var(--walnut); text-align: right; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(74,52,38,0.1); }
+    .config-summary__lead { font-size: 0.8rem; color: var(--moss); text-align: right; }
+    .config-actions { display: flex; gap: 0.75rem; }
+    .config-actions .btn { flex: 1; justify-content: center; }
+
+    /* 4. MATERIAL LIBRARY */
+    .material-library { padding: 5rem 0; background: var(--paper); }
+    .material-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .material-card { border-radius: var(--radius); overflow: hidden; background: var(--oat); transition: transform 0.4s var(--ease-expo); }
+    .material-card:hover { transform: translateY(-4px); }
+    .material-card__image { aspect-ratio: 1; overflow: hidden; }
+    .material-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease-expo); }
+    .material-card:hover .material-card__image img { transform: scale(1.06); }
+    .material-card__info { padding: 1rem 1.25rem 1.25rem; }
+    .material-card__info h4 { font-family: var(--font-serif); font-size: 1rem; color: var(--walnut); margin-bottom: 0.25rem; }
+    .material-card__info p { font-size: 0.75rem; color: #6b5d52; margin-bottom: 0.75rem; }
+    .material-card__add { font-size: 0.75rem; color: var(--clay); font-weight: 500; cursor: pointer; border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+    .material-card__add:hover { border-color: var(--clay); }
+
+    /* 5. ROOM PLANNER & AR */
+    .room-planner { padding: 5rem 0; background: var(--oat); }
+    .planner-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+    .planner-tab { padding: 0.65rem 1.5rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.2); font-size: 0.85rem; color: var(--walnut); cursor: pointer; transition: all 0.3s; }
+    .planner-tab:hover, .planner-tab.is-active { background: var(--walnut); color: var(--oat); border-color: var(--walnut); }
+    .planner-content { display: none; }
+    .planner-content.is-active { display: block; }
+    .planner-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    .planner-canvas { position: relative; border-radius: var(--radius); overflow: hidden; background: #e8e0d6; aspect-ratio: 4/3; cursor: crosshair; }
+    .planner-canvas__grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(74,52,38,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(74,52,38,0.06) 1px, transparent 1px); background-size: 40px 40px; }
+    .planner-furniture { position: absolute; border-radius: 8px; background: var(--walnut); opacity: 0.75; display: flex; align-items: center; justify-content: center; color: var(--oat); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; cursor: move; transition: box-shadow 0.2s; }
+    .planner-furniture:hover { box-shadow: 0 0 0 3px var(--clay); opacity: 0.9; }
+    .planner-furniture--sofa { width: 140px; height: 60px; top: 40%; left: 25%; }
+    .planner-furniture--table { width: 80px; height: 80px; top: 30%; left: 55%; border-radius: 50%; }
+    .planner-furniture--chair { width: 45px; height: 45px; top: 60%; left: 60%; border-radius: 50%; }
+    .planner-sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+    .planner-sidebar__group label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--moss); font-weight: 600; display: block; margin-bottom: 0.4rem; }
+    .planner-sidebar__group input { width: 100%; padding: 0.65rem 1rem; border-radius: 10px; border: 1px solid rgba(74,52,38,0.15); background: var(--paper); font-family: inherit; font-size: 0.85rem; outline: none; }
+    .planner-sidebar__group input:focus { border-color: var(--clay); }
+    .planner-check { display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem; background: rgba(94,107,74,0.08); border-radius: 10px; font-size: 0.8rem; color: var(--moss); }
+    .planner-check svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .planner-check--warn { background: rgba(181,101,74,0.08); color: var(--clay); }
+    .ar-mock { text-align: center; padding: 3rem; background: var(--paper); border-radius: var(--radius); border: 1px dashed rgba(74,52,38,0.2); }
+    .ar-mock svg { width: 64px; height: 64px; color: var(--chrome); margin-bottom: 1rem; }
+    .ar-mock h4 { font-family: var(--font-serif); font-size: 1.2rem; color: var(--walnut); margin-bottom: 0.5rem; }
+    .ar-mock p { font-size: 0.85rem; color: #6b5d52; margin-bottom: 1.5rem; }
+
+    /* 6. STYLE QUIZ */
+    .style-quiz { padding: 5rem 0; background: var(--paper); }
+    .quiz-container { max-width: 800px; margin: 3rem auto 0; }
+    .quiz-card { background: var(--oat); border-radius: var(--radius); padding: 2.5rem; }
+    .quiz-progress { display: flex; gap: 0.4rem; margin-bottom: 2rem; }
+    .quiz-progress span { flex: 1; height: 3px; background: rgba(74,52,38,0.1); border-radius: 100px; transition: background 0.3s; }
+    .quiz-progress span.is-active { background: var(--clay); }
+    .quiz-question { font-family: var(--font-serif); font-size: 1.4rem; color: var(--walnut); margin-bottom: 1.5rem; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .quiz-option { border-radius: 16px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.3s var(--ease-expo); }
+    .quiz-option:hover { border-color: var(--clay); transform: translateY(-2px); }
+    .quiz-option img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+    .quiz-option__label { padding: 0.75rem; font-size: 0.8rem; color: var(--walnut); text-align: center; background: var(--paper); font-weight: 500; }
+    .quiz-result { display: none; text-align: center; }
+    .quiz-result.is-visible { display: block; }
+    .quiz-result__profile { font-family: var(--font-serif); font-size: 2rem; color: var(--walnut); margin-bottom: 0.5rem; }
+    .quiz-result__desc { font-size: 0.95rem; color: #6b5d52; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; }
+    .quiz-result__edit { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .quiz-result__edit .product-card { background: var(--paper); }
+
+    /* 7. BOOK A CONSULT */
+    .consult { padding: 5rem 0; background: var(--oat); }
+    .consult-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+    .consult-types { display: flex; flex-direction: column; gap: 1rem; }
+    .consult-type { padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(74,52,38,0.12); cursor: pointer; transition: all 0.3s; background: var(--paper); }
+    .consult-type:hover, .consult-type.is-active { border-color: var(--walnut); box-shadow: 0 8px 24px rgba(74,52,38,0.08); }
+    .consult-type h4 { font-family: var(--font-serif); font-size: 1.1rem; color: var(--walnut); margin-bottom: 0.25rem; }
+    .consult-type p { font-size: 0.8rem; color: #6b5d52; }
+    .consult-type__duration { font-size: 0.7rem; color: var(--clay); font-weight: 500; margin-top: 0.5rem; }
+    .consult-form { display: flex; flex-direction: column; gap: 1rem; }
+    .consult-form input, .consult-form select, .consult-form textarea { width: 100%; padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid rgba(74,52,38,0.15); background: var(--paper); font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+    .consult-form input:focus, .consult-form select:focus, .consult-form textarea:focus { border-color: var(--clay); }
+    .consult-form textarea { resize: vertical; min-height: 80px; }
+    .consult-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* 8. CUSTOM STORIES */
+    .custom-stories { padding: 5rem 0; background: var(--paper); }
+    .stories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    .story-card { border-radius: var(--radius); overflow: hidden; background: var(--oat); }
+    .story-card__before-after { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+    .story-card__before-after img { width: 100%; height: 100%; object-fit: cover; }
+    .story-card__tag { position: absolute; top: 0.75rem; left: 0.75rem; background: var(--walnut); color: var(--oat); font-size: 0.6rem; padding: 0.3rem 0.7rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .story-card__info { padding: 1.25rem; }
+    .story-card__info h4 { font-family: var(--font-serif); font-size: 1.1rem; color: var(--walnut); margin-bottom: 0.5rem; }
+    .story-card__info p { font-size: 0.8rem; color: #6b5d52; line-height: 1.6; }
+    .story-card__quote { font-size: 0.75rem; color: var(--clay); font-style: italic; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(74,52,38,0.08); }
+
+    /* 9. PRICING TABLE */
+    .pricing-table { padding: 5rem 0; background: var(--oat); }
+    .pricing-table__wrap { overflow-x: auto; margin-top: 2.5rem; }
+    .pricing-table table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .pricing-table th, .pricing-table td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid rgba(74,52,38,0.1); }
+    .pricing-table th { font-family: var(--font-serif); font-size: 1rem; color: var(--walnut); font-weight: 400; }
+    .pricing-table td:first-child { font-weight: 500; color: var(--walnut); }
+    .pricing-table tbody tr:hover { background: rgba(250,248,245,0.5); }
+    .pricing-table__note { font-size: 0.8rem; color: #6b5d52; margin-top: 1.5rem; line-height: 1.7; }
+
+    /* 10. FAQ */
+    .atelier-faq { padding: 5rem 0; background: var(--paper); }
+    .faq-list { max-width: 800px; margin: 3rem auto 0; }
+    .faq-item { border-bottom: 1px solid rgba(74,52,38,0.1); }
+    .faq-question { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0; font-size: 0.95rem; font-weight: 500; color: var(--walnut); text-align: left; cursor: pointer; transition: color 0.3s; }
+    .faq-question:hover { color: var(--clay); }
+    .faq-question svg { width: 18px; height: 18px; transition: transform 0.3s; flex-shrink: 0; }
+    .faq-item.is-open .faq-question svg { transform: rotate(45deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease-expo); }
+    .faq-answer p { padding-bottom: 1.25rem; font-size: 0.85rem; color: #6b5d52; line-height: 1.7; }
+    .faq-item.is-open .faq-answer { max-height: 200px; }
+
+    /* FOOTER */
+    .site-footer { padding: 3rem 0 2rem; background: var(--paper); border-top: 1px solid rgba(74,52,38,0.08); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2rem; }
+    .footer-brand p { font-size: 0.8rem; color: #6b5d52; margin-top: 0.75rem; max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--walnut); margin-bottom: 1rem; font-weight: 600; }
+    .footer-col a { display: block; font-size: 0.8rem; color: #6b5d52; margin-bottom: 0.5rem; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--clay); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(74,52,38,0.08); font-size: 0.7rem; color: #9a8c82; flex-wrap: wrap; gap: 1rem; }
+
+    /* SWATCH DRAWER */
+    .swatch-drawer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: var(--walnut); color: var(--oat); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; transform: translateY(100%); transition: transform 0.6s var(--ease-expo); box-shadow: 0 -8px 40px rgba(0,0,0,0.3); flex-wrap: wrap; gap: 0.75rem; }
+    .swatch-drawer.is-visible { transform: translateY(0); }
+    .swatch-drawer__items { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+    .swatch-chip { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--oat); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+    .swatch-drawer__cta { background: var(--oat); color: var(--walnut); padding: 0.65rem 1.75rem; border-radius: 100px; font-weight: 600; font-size: 0.8rem; }
+    .swatch-drawer__close { color: var(--oat); font-size: 1.4rem; opacity: 0.6; }
+
+    @media (max-width: 1024px) {
+      .atelier-hero__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .step-card::after { display: none; }
+      .config-grid { grid-template-columns: 1fr; }
+      .material-grid { grid-template-columns: repeat(2, 1fr); }
+      .planner-grid { grid-template-columns: 1fr; }
+      .consult-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .stories-grid { grid-template-columns: 1fr; }
+      .header-nav { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .quiz-options { grid-template-columns: 1fr; }
+      .quiz-result__edit { grid-template-columns: 1fr; }
+      .material-grid { grid-template-columns: 1fr; }
+      .consult-form__row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .config-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="index.html" class="logo">Hearth <span>&</span> Grain</a>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="atelier.html" class="is-active">Atelier</a>
+      <a href="story.html">Story & Craft</a>
+      <a href="visit.html">Visit & Support</a>
+    </nav>
+    <div class="header-actions">
+      <button aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+      <button aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <button aria-label="Cart" style="position:relative;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count">0</span></button>
+    </div>
+  </header>
+
+  <!-- 1. HERO -->
+  <section class="atelier-hero">
+    <div class="container">
+      <div class="atelier-hero__grid">
+        <div class="atelier-hero__visual">
+          <img id="heroPreview" src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=85&auto=format&fit=crop" alt="The Soft Landing sofa in bouclé">
+          <div class="atelier-hero__swatches">
+            <div class="hero-swatch is-active" style="background:#d4c9b8;" data-img="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=85&auto=format&fit=crop" data-label="Oat Bouclé"></div>
+            <div class="hero-swatch" style="background:#7a6a5a;" data-img="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=85&auto=format&fit=crop" data-label="Walnut Velvet"></div>
+            <div class="hero-swatch" style="background:#5e6b4a;" data-img="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=85&auto=format&fit=crop" data-label="Moss Linen"></div>
+            <div class="hero-swatch" style="background:#b5654a;" data-img="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=85&auto=format&fit=crop" data-label="Clay Performance"></div>
+          </div>
+        </div>
+        <div class="atelier-hero__copy">
+          <p class="section-label">The Atelier</p>
+          <h1>Designed by you.<br><em>Built by us.</em></h1>
+          <p>Choose the size, the fabric, the wood and the finish. We make it to order and tell you exactly when it will arrive. No guessing, no vague timelines.</p>
+          <div class="atelier-hero__actions">
+            <a href="#configurator" class="btn btn-primary">Start designing</a>
+            <a href="#consult" class="btn btn-outline">Book a design consult</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. HOW IT WORKS -->
+  <section class="how-it-works">
+    <div class="container">
+      <p class="section-label">Four steps, no surprises</p>
+      <h2 class="section-heading">From first click to<br>front door.</h2>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-card__num">01</div><h3>Design</h3><p>Pick a base piece and choose your options. Every change updates the picture, the price and the lead time.</p></div>
+        <div class="step-card"><div class="step-card__num">02</div><h3>Check</h3><p>See it in your room with AR, or in the 2D planner. Check doorways, turning circles, and the delivery path.</p></div>
+        <div class="step-card"><div class="step-card__num">03</div><h3>Confirm</h3><p>Review your price, lead time and swatches. Order free samples before you commit to a fabric.</p></div>
+        <div class="step-card"><div class="step-card__num">04</div><h3>We build</h3><p>Your piece is made, finished and delivered, with updates along the way. Repairs supported for life.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. LIVE CONFIGURATOR -->
+  <section class="configurator" id="configurator">
+    <div class="container">
+      <p class="section-label">Build your Soft Landing</p>
+      <h2 class="section-heading">Every change updates<br>the picture, price and date.</h2>
+      <div class="config-grid">
+        <div class="config-visual">
+          <img id="configImage" src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&q=85&auto=format&fit=crop" alt="Soft Landing sofa configuration">
+          <div class="config-visual__overlay">
+            <span class="config-visual__badge" id="configBadge">3-seat · Bouclé · Walnut legs</span>
+            <span class="config-visual__badge">360° · AR ready</span>
+          </div>
+        </div>
+        <div class="config-panel">
+          <div class="config-group">
+            <div class="config-group__label">Number of seats</div>
+            <div class="config-pills" id="seatPills">
+              <span class="config-pill" data-seats="2" data-price="0">2-seat</span>
+              <span class="config-pill is-active" data-seats="3" data-price="0">3-seat</span>
+              <span class="config-pill" data-seats="4" data-price="420">4-seat (+$420)</span>
+            </div>
+          </div>
+          <div class="config-group">
+            <div class="config-group__label">Arm style</div>
+            <div class="config-pills" id="armPills">
+              <span class="config-pill is-active" data-arm="track" data-price="0">Track arm</span>
+              <span class="config-pill" data-arm="roll" data-price="180">Roll arm (+$180)</span>
+              <span class="config-pill" data-arm="slope" data-price="120">Slope arm (+$120)</span>
+            </div>
+          </div>
+          <div class="config-group">
+            <div class="config-group__label">Cover fabric</div>
+            <div class="config-pills" id="fabricPills">
+              <span class="config-pill is-active" data-fabric="boucle" data-price="0">Bouclé</span>
+              <span class="config-pill" data-fabric="velvet" data-price="240">Velvet (+$240)</span>
+              <span class="config-pill" data-fabric="linen" data-price="0">Washed Linen</span>
+              <span class="config-pill" data-fabric="perf" data-price="320">Performance (+$320)</span>
+            </div>
+          </div>
+          <div class="config-group">
+            <div class="config-group__label">Leg wood</div>
+            <div class="config-pills" id="legPills">
+              <span class="config-pill is-active" data-leg="walnut" data-price="0">Walnut</span>
+              <span class="config-pill" data-leg="oak" data-price="0">White Oak</span>
+              <span class="config-pill" data-leg="smoked" data-price="160">Smoked Oak (+$160)</span>
+            </div>
+          </div>
+          <div class="config-group">
+            <div class="config-group__label">Cushion fill</div>
+            <div class="config-pills" id="fillPills">
+              <span class="config-pill is-active" data-fill="down" data-price="0">Down-wrapped</span>
+              <span class="config-pill" data-fill="foam" data-price="0">High-resilience foam</span>
+              <span class="config-pill" data-fill="hybrid" data-price="140">Hybrid (+$140)</span>
+            </div>
+          </div>
+          <div class="config-summary">
+            <div class="config-summary__row"><span>Base price</span><span>$2,480</span></div>
+            <div class="config-summary__row"><span>Options</span><span id="optionsTotal">$0</span></div>
+            <div class="config-summary__price" id="totalPrice">$2,480</div>
+            <div class="config-summary__lead" id="leadTime">Ready by 12–18 Feb · 6–8 weeks</div>
+          </div>
+          <div class="config-actions">
+            <button class="btn btn-primary" onclick="alert('Configuration saved to My Rooms. (Mock — wire to account system.)')">Save to my rooms</button>
+            <button class="btn btn-outline" onclick="addSwatch('Bouclé Oat', '#d4c9b8'); alert('Swatch added to drawer.')">Order free swatches</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. MATERIAL LIBRARY -->
+  <section class="material-library">
+    <div class="container">
+      <p class="section-label">Touch before you buy</p>
+      <h2 class="section-heading">Choose up to six free swatches.</h2>
+      <p style="font-size:0.9rem; color:#5a4a3e; margin-top:0.75rem; max-width:560px;">We send them in a small box. Each sample comes with a care card and a note on what the material does best.</p>
+      <div class="material-grid">
+        <div class="material-card"><div class="material-card__image"><img src="https://images.unsplash.com/photo-1611021061285-8c7c1b0b0c0d?w=400&q=80&auto=format&fit=crop" alt="Walnut swatch"></div><div class="material-card__info"><h4>Walnut</h4><p>Strength and grain you want to see.</p><span class="material-card__add" onclick="addSwatch('Walnut','#4a3426')">+ Add to swatch drawer</span></div></div>
+        <div class="material-card"><div class="material-card__image"><img src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&q=80&auto=format&fit=crop" alt="Bouclé swatch"></div><div class="material-card__info"><h4>Bouclé</h4><p>Looped, textural, cosy. Statement seating.</p><span class="material-card__add" onclick="addSwatch('Bouclé','#d4c9b8')">+ Add to swatch drawer</span></div></div>
+        <div class="material-card"><div class="material-card__image"><img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?w=400&q=80&auto=format&fit=crop" alt="Washed linen swatch"></div><div class="material-card__info"><h4>Washed Linen</h4><p>Relaxed, breathable, lived-in. Everyday family use.</p><span class="material-card__add" onclick="addSwatch('Linen','#c9cccf')">+ Add to swatch drawer</span></div></div>
+        <div class="material-card"><div class="material-card__image"><img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400&q=80&auto=format&fit=crop" alt="Stone swatch"></div><div class="material-card__info"><h4>Stone</h4><p>Each top cut from a single slab. No two alike.</p><span class="material-card__add" onclick="addSwatch('Stone','#c9cccf')">+ Add to swatch drawer</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ROOM PLANNER & AR -->
+  <section class="room-planner">
+    <div class="container">
+      <p class="section-label">See it before it arrives</p>
+      <h2 class="section-heading">Point your phone at the floor.<br>Or draw your room on a plan.</h2>
+      <div class="planner-tabs">
+        <button class="planner-tab is-active" onclick="switchPlanner('ar', this)">In my room (AR)</button>
+        <button class="planner-tab" onclick="switchPlanner('plan', this)">On a plan (2D)</button>
+      </div>
+      <div class="planner-content is-active" id="plannerAR">
+        <div class="ar-mock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M8 10h8M8 14h5"/><circle cx="17" cy="14" r="2"/></svg>
+          <h4>Scan the QR code with your phone</h4>
+          <p>Open the AR viewer, point at your floor, and place the sofa where it will go. True scale, real light.</p>
+          <div style="display:inline-block; padding:1rem 1.5rem; background:var(--oat); border-radius:12px; font-family:monospace; font-size:0.8rem; color:var(--walnut);">[ QR CODE MOCK ]</div>
+          <p style="margin-top:1rem; font-size:0.75rem;">Production: use model-viewer or 8th Wall. Requires a GLB/USDZ model per SKU.</p>
+        </div>
+      </div>
+      <div class="planner-content" id="plannerPlan">
+        <div class="planner-grid">
+          <div class="planner-canvas">
+            <div class="planner-canvas__grid"></div>
+            <div class="planner-furniture planner-furniture--sofa">Soft Landing 3-seat</div>
+            <div class="planner-furniture planner-furniture--table">Coffee Table</div>
+            <div class="planner-furniture planner-furniture--chair">One Chair</div>
+          </div>
+          <div class="planner-sidebar">
+            <div class="planner-sidebar__group"><label>Room width (cm)</label><input type="number" value="420" id="roomWidth"></div>
+            <div class="planner-sidebar__group"><label>Room depth (cm)</label><input type="number" value="360" id="roomDepth"></div>
+            <div class="planner-sidebar__group"><label>Doorway width (cm)</label><input type="number" value="85" id="doorWidth"></div>
+            <div class="planner-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>Sofa fits through doorway (78 cm)</div>
+            <div class="planner-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>Turning circle OK for stairwell</div>
+            <div class="planner-check planner-check--warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Coffee table leaves 40 cm walkway — tight but passable</div>
+            <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="alert('Layout saved. (Mock — wire to account + share API.)')">Save this layout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. STYLE QUIZ -->
+  <section class="style-quiz">
+    <div class="container">
+      <p class="section-label">Not sure of your style?</p>
+      <h2 class="section-heading">Answer five quick questions.</h2>
+      <div class="quiz-container">
+        <div class="quiz-card" id="quizCard">
+          <div class="quiz-progress" id="quizProgress"><span class="is-active"></span><span></span><span></span><span></span><span></span></div>
+          <div id="quizQuestions">
+            <div class="quiz-question" id="quizQuestion">Pick the room you would sleep in.</div>
+            <div class="quiz-options" id="quizOptions"></div>
+          </div>
+          <div class="quiz-result" id="quizResult">
+            <div class="quiz-result__profile" id="resultProfile">You lean warm, textured and relaxed.</div>
+            <p class="quiz-result__desc" id="resultDesc">Here is where we would start. Collected, not matched. Deep seating, warm woods, and fabrics you want to touch.</p>
+            <div class="quiz-result__edit" id="resultEdit"></div>
+            <button class="btn btn-primary" onclick="resetQuiz()">Take the quiz again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. BOOK A CONSULT -->
+  <section class="consult" id="consult">
+    <div class="container">
+      <p class="section-label">Talk it through with a designer</p>
+      <h2 class="section-heading">No pressure. Just a<br>real conversation.</h2>
+      <div class="consult-grid">
+        <div>
+          <p style="font-size:0.95rem; color:#5a4a3e; line-height:1.8; margin-bottom:1.5rem;">Share your room, your sizes and your budget. We will suggest layouts, fabrics and a realistic plan. If you have photos or a sketch, even better.</p>
+          <div class="consult-types">
+            <div class="consult-type is-active"><h4>15-minute video call</h4><p>Fast answers on sizes, fabrics and fit.</p><div class="consult-type__duration">Free · No pressure</div></div>
+            <div class="consult-type"><h4>45-minute room review</h4><p>Bring your floor plan, photos and questions. We will build a plan together.</p><div class="consult-type__duration">Free · Includes swatch kit</div></div>
+            <div class="consult-type"><h4>Showroom visit</h4><p>Sit on it. Touch it. Stay a while. By appointment or walk-in.</p><div class="consult-type__duration">Detroit · Copenhagen</div></div>
+          </div>
+        </div>
+        <form class="consult-form" onsubmit="event.preventDefault(); alert('Consult request received. (Mock — wire to Calendly/booking API.)')">
+          <div class="consult-form__row"><input type="text" placeholder="Name" required><input type="email" placeholder="Email" required></div>
+          <select><option>Living room</option><option>Dining room</option><option>Bedroom</option><option>Whole home</option></select>
+          <textarea placeholder="Tell us about the room, the sizes, the budget — or anything that worries you."></textarea>
+          <input type="text" placeholder="Preferred time (e.g. Tuesday afternoon, GMT)">
+          <button type="submit" class="btn btn-primary" style="justify-content:center;">Book my consult</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CUSTOM STORIES -->
+  <section class="custom-stories">
+    <div class="container">
+      <p class="section-label">Pieces made for particular rooms</p>
+      <h2 class="section-heading">Real constraints.<br>Real solutions.</h2>
+      <div class="stories-grid">
+        <div class="story-card"><div class="story-card__before-after"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80&auto=format&fit=crop" alt="Narrow terrace sofa"><span class="story-card__tag">Before / After</span></div><div class="story-card__info"><h4>The Narrow Terrace</h4><p>A three-seat sofa that could make a tight turn on the stairs. Built in two modules. Fits without a crane.</p><div class="story-card__quote">"They measured the stairwell before they quoted." — Verified buyer</div></div></div>
+        <div class="story-card"><div class="story-card__before-after"><img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80&auto=format&fit=crop" alt="Low ceiling dining table"><span class="story-card__tag">Before / After</span></div><div class="story-card__info"><h4>The Low Ceiling</h4><p>A dining table for six that seats eight, with a 72 cm height and a pedestal base for legroom. No head bumps.</p><div class="story-card__quote">"We had the swatches before we committed. Smart." — Verified buyer</div></div></div>
+        <div class="story-card"><div class="story-card__before-after"><img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80&auto=format&fit=crop" alt="Awkward alcove bed"><span class="story-card__tag">Before / After</span></div><div class="story-card__info"><h4>The Awkward Alcove</h4><p>A bed frame cut to 187 cm for a 187 cm alcove. No gap, no dust trap. Walnut headboard, hidden storage.</p><div class="story-card__quote">"The planner showed me exactly how it would sit." — Verified buyer</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. PRICING TABLE -->
+  <section class="pricing-table">
+    <div class="container">
+      <p class="section-label">What it costs and how long it takes</p>
+      <h2 class="section-heading">Plain numbers.<br>No asterisks.</h2>
+      <div class="pricing-table__wrap">
+        <table>
+          <thead><tr><th>Option</th><th>Price</th><th>Lead time</th><th>What is included</th></tr></thead>
+          <tbody>
+            <tr><td>Standard made-to-order</td><td>From $2,480</td><td>6–8 weeks</td><td>Delivery to your door, assembly instructions, care kit</td></tr>
+            <tr><td>Custom size</td><td>+ $180–$420</td><td>8–10 weeks</td><td>Cut to your dimensions, doorway-fit check included</td></tr>
+            <tr><td>Custom fabric</td><td>+ $240–$320</td><td>8–10 weeks</td><td>Swatch kit sent before you commit, cover washable</td></tr>
+            <tr><td>Rush option (if offered)</td><td>+ $350</td><td>4–5 weeks</td><td>Priority build slot, same quality checks</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="pricing-table__note">Your price includes delivery to your door. Any extra, such as assembly or old-piece removal, is shown before you pay. Custom pieces are non-returnable — that is why swatches and the consult exist. Use them.</p>
+    </div>
+  </section>
+
+  <!-- 10. FAQ -->
+  <section class="atelier-faq">
+    <div class="container">
+      <p class="section-label">Atelier FAQ</p>
+      <h2 class="section-heading">Questions, answered plainly.</h2>
+      <div class="faq-list">
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Can I return a custom piece?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Most custom items are non-returnable. That is why we send free swatches and offer a design consult before you commit. If something arrives damaged or not as specified, we fix it. Read the full policy on the Visit & Support page.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Can I change my order after confirming?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Yes, within 24 hours of ordering. After that, the timber may already be cut. Email us and we will tell you exactly where your piece is in the build.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">How are the covers cleaned?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Removable covers can be machine washed cold on a gentle cycle. Care guidance is on each product page. Bouclé should be professionally cleaned. We include a care card with every swatch kit.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Can you match a colour I already have?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Send a photo or order a swatch, and we will help match it. We do not guarantee an exact match across different materials, but we will tell you honestly how close we can get.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Do you offer trade pricing?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Yes. Interior designers and developers can apply for trade pricing on the Visit & Support page. Volume pricing and spec sheets are available on request.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Where is it made?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer"><p>Our frames are built by a workshop team in Michigan, and upholstery is finished in Copenhagen. The initials of the maker are marked inside every frame. Read more on the Story & Craft page.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Hearth <span>&</span> Grain</div><p>Furniture for homes that are lived in. Warm woods, deep seating, honest materials.</p></div>
+        <div class="footer-col"><h4>Shop</h4><a href="shop.html">Living</a><a href="shop.html">Dining</a><a href="shop.html">Bedroom</a><a href="shop.html">Small Spaces</a></div>
+        <div class="footer-col"><h4>Atelier</h4><a href="#configurator">Configurator</a><a href="#room-planner">Room Planner</a><a href="#style-quiz">Style Quiz</a><a href="#consult">Book a Consult</a></div>
+        <div class="footer-col"><h4>Support</h4><a href="visit.html">Delivery & Returns</a><a href="visit.html">Care & Repair</a><a href="visit.html">FAQ</a><a href="visit.html">Contact</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Hearth & Grain.</span><span>WCAG 2.2 AA · Carbon-neutral shipping</span></div>
+    </div>
+  </footer>
+
+  <!-- SWATCH DRAWER -->
+  <div class="swatch-drawer" id="swatchDrawer">
+    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;"><span style="font-size:0.75rem; opacity:0.7;">Your swatch drawer</span><div class="swatch-drawer__items" id="swatchItems"></div></div>
+    <div style="display:flex; align-items:center; gap:1rem;"><button class="swatch-drawer__cta" onclick="alert('Swatch kit request — wire to fulfilment.')">Order free swatches →</button><button class="swatch-drawer__close" id="swatchClose">×</button></div>
+  </div>
+
+  <script>
+    // ============ HERO SWATCH PREVIEW ============
+    document.querySelectorAll('.hero-swatch').forEach(sw => {
+      sw.addEventListener('click', function() {
+        document.querySelectorAll('.hero-swatch').forEach(s => s.classList.remove('is-active'));
+        this.classList.add('is-active');
+        const img = document.getElementById('heroPreview');
+        img.style.opacity = '0.7';
+        setTimeout(() => { img.src = this.dataset.img; img.style.opacity = '1'; }, 200);
+        addSwatch(this.dataset.label, getComputedStyle(this).backgroundColor);
+      });
+    });
+
+    // ============ CONFIGURATOR ============
+    const BASE_PRICE = 2480;
+    const state = { seats: 3, seatsPrice: 0, arm: 'track', armPrice: 0, fabric: 'boucle', fabricPrice: 0, leg: 'walnut', legPrice: 0, fill: 'down', fillPrice: 0 };
+
+    function initPills(containerId, key, priceKey) {
+      document.querySelectorAll(`#${containerId} .config-pill`).forEach(pill => {
+        pill.addEventListener('click', function() {
+          document.querySelectorAll(`#${containerId} .config-pill`).forEach(p => p.classList.remove('is-active'));
+          this.classList.add('is-active');
+          state[key] = this.dataset[key] || this.dataset.seats || this.dataset.arm || this.dataset.fabric || this.dataset.leg || this.dataset.fill;
+          state[priceKey] = parseInt(this.dataset.price) || 0;
+          updateConfig();
+        });
+      });
+    }
+    initPills('seatPills', 'seats', 'seatsPrice');
+    initPills('armPills', 'arm', 'armPrice');
+    initPills('fabricPills', 'fabric', 'fabricPrice');
+    initPills('legPills', 'leg', 'legPrice');
+    initPills('fillPills', 'fill', 'fillPrice');
+
+    function updateConfig() {
+      const options = state.seatsPrice + state.armPrice + state.fabricPrice + state.legPrice + state.fillPrice;
+      const total = BASE_PRICE + options;
+      document.getElementById('optionsTotal').textContent = options > 0 ? `+$${options.toLocaleString()}` : '$0';
+      document.getElementById('totalPrice').textContent = `$${total.toLocaleString()}`;
+      const seatsLabel = state.seats === 2 ? '2-seat' : state.seats === 3 ? '3-seat' : '4-seat';
+      const fabricLabel = state.fabric === 'boucle' ? 'Bouclé' : state.fabric === 'velvet' ? 'Velvet' : state.fabric === 'linen' ? 'Linen' : 'Performance';
+      const legLabel = state.leg === 'walnut' ? 'Walnut' : state.leg === 'oak' ? 'White Oak' : 'Smoked Oak';
+      document.getElementById('configBadge').textContent = `${seatsLabel} · ${fabricLabel} · ${legLabel} legs`;
+      const leadWeeks = state.fabric === 'velvet' || state.fabric === 'perf' ? '8–10' : '6–8';
+      document.getElementById('leadTime').textContent = `Ready in ${leadWeeks} weeks · ${leadWeeks === '6–8' ? '12–18 Feb' : '19–25 Feb'}`;
+    }
+
+    // ============ ROOM PLANNER TABS ============
+    function switchPlanner(tab, btn) {
+      document.querySelectorAll('.planner-tab').forEach(t => t.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      document.querySelectorAll('.planner-content').forEach(c => c.classList.remove('is-active'));
+      document.getElementById(tab === 'ar' ? 'plannerAR' : 'plannerPlan').classList.add('is-active');
+    }
+
+    // ============ STYLE QUIZ ============
+    const QUIZ_DATA = [
+      { q: 'Pick the room you would sleep in.', options: [
+        { label: 'Warm, low light, heavy linen', img: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=400&q=80&auto=format&fit=crop', profile: 'warm' },
+        { label: 'Clean lines, oak, morning light', img: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&q=80&auto=format&fit=crop', profile: 'minimal' }
+      ]},
+      { q: 'Which texture would you touch first?', options: [
+        { label: 'Looped bouclé', img: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&q=80&auto=format&fit=crop', profile: 'warm' },
+        { label: 'Smooth velvet', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80&auto=format&fit=crop', profile: 'dramatic' }
+      ]},
+      { q: 'How do you host?', options: [
+        { label: 'Long dinners, everyone stays', img: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400&q=80&auto=format&fit=crop', profile: 'warm' },
+        { label: 'Small groups, quiet corners', img: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80&auto=format&fit=crop', profile: 'minimal' }
+      ]},
+      { q: 'What does your light look like?', options: [
+        { label: 'Warm, low, lamps after 4pm', img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80&auto=format&fit=crop', profile: 'dramatic' },
+        { label: 'Bright, natural, wide windows', img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=400&q=80&auto=format&fit=crop', profile: 'minimal' }
+      ]},
+      { q: 'Pick a wood.', options: [
+        { label: 'Walnut, visible grain, warm', img: 'https://images.unsplash.com/photo-1611021061285-8c7c1b0b0c0d?w=400&q=80&auto=format&fit=crop', profile: 'warm' },
+        { label: 'Smoked oak, quiet, dark', img: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400&q=80&auto=format&fit=crop', profile: 'dramatic' }
+      ]}
+    ];
+    let quizIndex = 0;
+    let quizAnswers = [];
+
+    function renderQuiz() {
+      if (quizIndex >= QUIZ_DATA.length) { showQuizResult(); return; }
+      const q = QUIZ_DATA[quizIndex];
+      document.getElementById('quizQuestion').textContent = q.q;
+      const opts = document.getElementById('quizOptions');
+      opts.innerHTML = q.options.map(o => `<div class="quiz-option" onclick="answerQuiz('${o.profile}', this)"><img src="${o.img}" alt="${o.label}"><div class="quiz-option__label">${o.label}</div></div>`).join('');
+      document.querySelectorAll('#quizProgress span').forEach((s, i) => s.classList.toggle('is-active', i <= quizIndex));
+    }
+
+    function answerQuiz(profile, el) {
+      quizAnswers.push(profile);
+      quizIndex++;
+      if (quizIndex < QUIZ_DATA.length) { renderQuiz(); } else { showQuizResult(); }
+    }
+
+    function showQuizResult() {
+      document.getElementById('quizQuestions').style.display = 'none';
+      document.getElementById('quizResult').classList.add('is-visible');
+      const counts = {};
+      quizAnswers.forEach(p => counts[p] = (counts[p] || 0) + 1);
+      const top = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+      const profiles = {
+        warm: { name: 'Warm, textured, relaxed', desc: 'You want a room that feels collected, not staged. Deep seating, visible grain, fabrics you want to touch. Here is where we would start.' },
+        minimal: { name: 'Quiet, bright, intentional', desc: 'You want space to breathe. Clean lines, light woods, and pieces that do one thing well. Here is where we would start.' },
+        dramatic: { name: 'Rich, moody, sculptural', desc: 'You want contrast. Dark woods, jewel tones, one statement chair that earns its corner. Here is where we would start.' }
+      };
+      const p = profiles[top] || profiles.warm;
+      document.getElementById('resultProfile').textContent = p.name;
+      document.getElementById('resultDesc').textContent = p.desc;
+      const picks = [
+        { name: 'Soft Landing Sofa', price: '$2,480', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&q=80&auto=format&fit=crop' },
+        { name: 'Curve Coffee Table', price: '$1,180', img: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=300&q=80&auto=format&fit=crop' },
+        { name: 'The One Chair — Moss', price: '$1,620', img: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=300&q=80&auto=format&fit=crop' }
+      ];
+      document.getElementById('resultEdit').innerHTML = picks.map(pp => `<div class="product-card"><img src="${pp.img}" alt="${pp.name}" style="aspect-ratio:1;object-fit:cover;"><div style="padding:0.75rem;"><div style="font-family:var(--font-serif);font-size:0.9rem;color:var(--walnut);">${pp.name}</div><div style="font-size:0.8rem;color:var(--ink);">${pp.price}</div></div></div>`).join('');
+    }
+
+    function resetQuiz() {
+      quizIndex = 0; quizAnswers = [];
+      document.getElementById('quizResult').classList.remove('is-visible');
+      document.getElementById('quizQuestions').style.display = 'block';
+      renderQuiz();
+    }
+
+    // ============ CONSULT TYPE SELECTION ============
+    document.querySelectorAll('.consult-type').forEach(ct => {
+      ct.addEventListener('click', function() {
+        document.querySelectorAll('.consult-type').forEach(c => c.classList.remove('is-active'));
+        this.classList.add('is-active');
+      });
+    });
+
+    // ============ FAQ ============
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('is-open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('is-open'));
+      if (!wasOpen) item.classList.add('is-open');
+    }
+
+    // ============ SWATCH DRAWER ============
+    const drawer = document.getElementById('swatchDrawer'), items = document.getElementById('swatchItems');
+    let swatches = [];
+    function addSwatch(name, color) {
+      if (swatches.length >= 6) { alert('Maximum 6 swatches.'); return; }
+      if (swatches.find(s => s.name === name)) return;
+      swatches.push({ name, color }); renderSwatches(); drawer.classList.add('is-visible');
+    }
+    function renderSwatches() {
+      items.innerHTML = swatches.map((s, i) => `<div class="swatch-chip" style="background:${s.color}; color:${isLight(s.color) ? '#1E1A17' : '#F3EDE4'};" title="${s.name}" onclick="removeSwatch(${i})">${s.name.slice(0, 2)}</div>`).join('');
+    }
+    function removeSwatch(i) { swatches.splice(i, 1); renderSwatches(); if (!swatches.length) drawer.classList.remove('is-visible'); }
+    function isLight(hex) { const c = hex.replace('#', ''); const r = parseInt(c.substr(0, 2), 16), g = parseInt(c.substr(2, 2), 16), b = parseInt(c.substr(4, 2), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 128; }
+    document.getElementById('swatchClose').addEventListener('click', () => drawer.classList.remove('is-visible'));
+
+    // ============ INIT ============
+    renderQuiz();
+    updateConfig();
+    console.log('Hearth & Grain — Atelier page loaded. Configurator, planner, quiz active.');
+  </script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — Hearth & Grain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --oat: #F3EDE4; --walnut: #4A3426; --moss: #5E6B4A; --clay: #B5654A;
+      --oxblood: #6B2A2F; --chrome: #C9CCCF; --ink: #1E1A17; --paper: #FAF8F5;
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+      --font-serif: 'Fraunces', serif; --font-sans: 'Inter', sans-serif;
+      --header-h: 80px; --radius: 24px;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-sans); background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+    img { display: block; max-width: 100%; height: auto; }
+    button { font-family: inherit; border: none; background: none; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1440px, 92vw); margin-inline: auto; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; border-radius: 100px; font-size: 0.9rem; font-weight: 500; transition: all 0.5s var(--ease-expo); border: 1px solid transparent; cursor: pointer; }
+    .btn-primary { background: var(--walnut); color: var(--oat); }
+    .btn-primary:hover { background: var(--oxblood); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(74,52,38,0.2); }
+    .btn-outline { border-color: var(--walnut); color: var(--walnut); background: transparent; }
+    .btn-outline:hover { background: var(--walnut); color: var(--oat); }
+    .btn-ghost { padding: 0.5rem 0; border-bottom: 1px solid var(--walnut); border-radius: 0; color: var(--walnut); }
+    .btn-ghost:hover { color: var(--clay); border-color: var(--clay); }
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--moss); font-weight: 600; margin-bottom: 0.75rem; }
+    .section-heading { font-family: var(--font-serif); font-size: clamp(1.8rem, 3.5vw, 3rem); line-height: 1.1; color: var(--walnut); font-weight: 400; }
+
+    /* HEADER */
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 0 2rem; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; transition: all 0.5s var(--ease-expo); background: rgba(250,248,245,0.94); backdrop-filter: blur(20px); box-shadow: 0 1px 0 rgba(74,52,38,0.08); }
+    .logo { font-family: var(--font-serif); font-size: 1.5rem; color: var(--walnut); font-weight: 500; }
+    .logo span { color: var(--clay); }
+    .header-nav { display: flex; gap: 2.5rem; font-size: 0.85rem; font-weight: 500; color: var(--walnut); }
+    .header-nav a { position: relative; padding: 0.25rem 0; }
+    .header-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--clay); transition: width 0.4s var(--ease-expo); }
+    .header-nav a:hover::after, .header-nav a.is-active::after { width: 100%; }
+    .header-actions { display: flex; gap: 1.5rem; align-items: center; }
+    .header-actions button { color: var(--walnut); transition: transform 0.3s var(--ease-expo); }
+    .header-actions button:hover { transform: translateY(-2px); }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--clay); color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+    /* 1. COLLECTION HERO */
+    .collection-hero { padding: calc(var(--header-h) + 4rem) 0 3rem; background: var(--oat); }
+    .collection-hero__inner { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; }
+    .collection-hero h1 { max-width: 700px; }
+    .collection-hero p { font-size: 1.05rem; color: #5a4a3e; max-width: 480px; line-height: 1.75; }
+
+    /* 2. SMART FILTER BAR */
+    .filter-bar { position: sticky; top: var(--header-h); z-index: 900; background: rgba(250,248,245,0.96); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(74,52,38,0.08); padding: 1rem 0; }
+    .filter-bar__inner { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .filter-group { position: relative; }
+    .filter-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.2); font-size: 0.8rem; color: var(--walnut); transition: all 0.3s; background: var(--paper); }
+    .filter-btn:hover, .filter-btn.is-active { background: var(--walnut); color: var(--oat); border-color: var(--walnut); }
+    .filter-btn svg { width: 12px; height: 12px; }
+    .filter-dropdown { position: absolute; top: calc(100% + 8px); left: 0; background: var(--paper); border-radius: 16px; box-shadow: 0 16px 48px rgba(0,0,0,0.12); padding: 1rem; min-width: 220px; display: none; z-index: 100; }
+    .filter-dropdown.is-open { display: block; }
+    .filter-dropdown label { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+    .filter-dropdown label:hover { background: var(--oat); }
+    .filter-dropdown input { accent-color: var(--walnut); }
+    .quick-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-left: auto; }
+    .chip { padding: 0.45rem 1rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.15); font-size: 0.75rem; color: var(--walnut); cursor: pointer; transition: all 0.3s; background: transparent; white-space: nowrap; }
+    .chip:hover, .chip.is-active { background: var(--moss); color: var(--oat); border-color: var(--moss); }
+    .filter-count { font-size: 0.8rem; color: #9a8c82; margin-left: 0.5rem; }
+
+    /* 3. PRODUCT GRID */
+    .product-section { padding: 3rem 0 5rem; background: var(--paper); }
+    .grid-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .grid-header__count { font-size: 0.85rem; color: #6b5d52; }
+    .grid-header__sort { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--walnut); }
+    .grid-header__sort select { padding: 0.4rem 0.75rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.2); background: var(--paper); font-family: inherit; font-size: 0.8rem; color: var(--walnut); cursor: pointer; }
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .product-card { background: var(--paper); border-radius: var(--radius); overflow: hidden; transition: transform 0.5s var(--ease-expo), box-shadow 0.5s var(--ease-expo); cursor: pointer; border: 1px solid rgba(74,52,38,0.06); }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(74,52,38,0.1); }
+    .product-card__image { position: relative; aspect-ratio: 4/5; overflow: hidden; background: var(--oat); }
+    .product-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease-expo); }
+    .product-card:hover .product-card__image img { transform: scale(1.06); }
+    .product-card__badge { position: absolute; top: 0.75rem; left: 0.75rem; background: var(--walnut); color: var(--oat); font-size: 0.55rem; padding: 0.3rem 0.7rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+    .product-card__wish { position: absolute; top: 0.75rem; right: 0.75rem; width: 32px; height: 32px; border-radius: 50%; background: rgba(250,248,245,0.92); display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: var(--walnut); }
+    .product-card__wish:hover { background: var(--clay); color: white; }
+    .product-card__wish.is-active { background: var(--oxblood); color: white; }
+    .product-card__swatch { position: absolute; bottom: 0.75rem; right: 0.75rem; display: flex; gap: 0.25rem; }
+    .product-card__swatch span { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid rgba(250,248,245,0.9); box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+    .product-card__info { padding: 1rem; }
+    .product-card__collection { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--moss); margin-bottom: 0.25rem; }
+    .product-card__name { font-family: var(--font-serif); font-size: 1rem; color: var(--walnut); margin-bottom: 0.3rem; line-height: 1.3; }
+    .product-card__price { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
+    .product-card__meta { font-size: 0.7rem; color: #9a8c82; margin-top: 0.25rem; }
+    .empty-state { text-align: center; padding: 4rem 2rem; grid-column: 1 / -1; }
+    .empty-state h3 { font-family: var(--font-serif); font-size: 1.5rem; color: var(--walnut); margin-bottom: 0.75rem; }
+    .empty-state p { color: #6b5d52; font-size: 0.9rem; }
+
+    /* 4. EDITORIAL BREAK */
+    .editorial-break { grid-column: 1 / -1; padding: 2rem 0; }
+    .editorial-break__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; background: var(--oat); border-radius: var(--radius); overflow: hidden; }
+    .editorial-break__image { aspect-ratio: 16/10; overflow: hidden; }
+    .editorial-break__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-expo); }
+    .editorial-break:hover .editorial-break__image img { transform: scale(1.04); }
+    .editorial-break__copy { padding: 2.5rem 2.5rem 2.5rem 0; }
+    .editorial-break__copy h3 { font-family: var(--font-serif); font-size: clamp(1.4rem, 2.5vw, 2rem); color: var(--walnut); line-height: 1.2; margin-bottom: 0.75rem; }
+    .editorial-break__copy p { font-size: 0.9rem; color: #5a4a3e; line-height: 1.7; margin-bottom: 1.25rem; }
+
+    /* 5. PRODUCT DETAIL PANEL (Slide-over) */
+    .detail-overlay { position: fixed; inset: 0; background: rgba(30,26,23,0.5); backdrop-filter: blur(4px); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+    .detail-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .detail-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(680px, 100vw); background: var(--paper); z-index: 2001; transform: translateX(100%); transition: transform 0.6s var(--ease-expo); overflow-y: auto; }
+    .detail-panel.is-open { transform: translateX(0); }
+    .detail-panel__close { position: sticky; top: 1rem; float: right; margin: 1rem; width: 40px; height: 40px; border-radius: 50%; background: var(--oat); display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 1.3rem; color: var(--walnut); }
+    .detail-gallery { position: relative; aspect-ratio: 4/3; background: var(--oat); overflow: hidden; }
+    .detail-gallery img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-gallery__badge { position: absolute; bottom: 1rem; left: 1rem; background: rgba(30,26,23,0.7); backdrop-filter: blur(8px); color: var(--oat); font-size: 0.65rem; padding: 0.4rem 1rem; border-radius: 100px; display: flex; gap: 0.5rem; align-items: center; }
+    .detail-body { padding: 2rem; }
+    .detail-body__collection { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--moss); margin-bottom: 0.4rem; }
+    .detail-body h2 { font-family: var(--font-serif); font-size: 1.8rem; color: var(--walnut); margin-bottom: 0.5rem; }
+    .detail-body__price { font-size: 1.2rem; font-weight: 500; color: var(--ink); margin-bottom: 1.5rem; }
+    .detail-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .detail-fact { font-size: 0.8rem; }
+    .detail-fact__label { color: #9a8c82; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .detail-fact__value { color: var(--walnut); font-weight: 500; }
+    .detail-options { margin-bottom: 1.5rem; }
+    .detail-options__label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--moss); margin-bottom: 0.5rem; font-weight: 600; }
+    .detail-options__pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .detail-pill { padding: 0.45rem 1rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.2); font-size: 0.8rem; color: var(--walnut); cursor: pointer; transition: all 0.3s; }
+    .detail-pill:hover, .detail-pill.is-active { background: var(--walnut); color: var(--oat); border-color: var(--walnut); }
+    .detail-delivery { background: var(--oat); border-radius: 14px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .detail-delivery__label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--moss); margin-bottom: 0.5rem; font-weight: 600; }
+    .detail-delivery__form { display: flex; gap: 0.5rem; }
+    .detail-delivery__form input { flex: 1; padding: 0.65rem 1rem; border-radius: 100px; border: 1px solid rgba(74,52,38,0.2); background: var(--paper); font-family: inherit; font-size: 0.85rem; outline: none; }
+    .detail-delivery__form button { padding: 0.65rem 1.25rem; border-radius: 100px; background: var(--walnut); color: var(--oat); font-size: 0.8rem; font-weight: 500; }
+    .detail-care { font-size: 0.8rem; color: #6b5d52; line-height: 1.7; margin-bottom: 1.5rem; padding: 1rem; border-left: 3px solid var(--clay); background: rgba(181,101,74,0.04); }
+    .detail-reviews { margin-bottom: 1.5rem; }
+    .detail-reviews__header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .detail-reviews__stars { color: var(--clay); font-size: 0.9rem; }
+    .detail-review { font-size: 0.8rem; color: #5a4a3e; line-height: 1.6; padding: 0.75rem 0; border-bottom: 1px solid rgba(74,52,38,0.08); }
+    .detail-pair { margin-bottom: 1.5rem; }
+    .detail-pair__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .detail-pair__item { text-align: center; cursor: pointer; }
+    .detail-pair__item img { border-radius: 10px; aspect-ratio: 1; object-fit: cover; margin-bottom: 0.4rem; }
+    .detail-pair__item span { font-size: 0.7rem; color: var(--walnut); }
+    .detail-actions { display: flex; flex-direction: column; gap: 0.75rem; position: sticky; bottom: 0; background: var(--paper); padding: 1rem 0; border-top: 1px solid rgba(74,52,38,0.08); }
+    .detail-actions .btn { justify-content: center; }
+    .detail-reassurance { font-size: 0.75rem; color: #9a8c82; text-align: center; }
+
+    /* 6. MATERIALS COMPARE */
+    .materials-compare { padding: 6rem 0; background: var(--oat); }
+    .materials-table-wrap { overflow-x: auto; margin-top: 2.5rem; }
+    .materials-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .materials-table th, .materials-table td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid rgba(74,52,38,0.1); }
+    .materials-table th { font-family: var(--font-serif); font-size: 1rem; color: var(--walnut); font-weight: 400; }
+    .materials-table td:first-child { font-weight: 500; color: var(--walnut); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .materials-table tbody tr:hover { background: rgba(250,248,245,0.6); }
+    .material-swatch { display: inline-block; width: 24px; height: 24px; border-radius: 50%; margin-right: 0.5rem; vertical-align: middle; border: 1.5px solid rgba(74,52,38,0.15); }
+
+    /* 7. ROOM SETS */
+    .room-sets { padding: 6rem 0; background: var(--paper); }
+    .room-sets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+    .room-set { background: var(--oat); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: transform 0.5s var(--ease-expo); }
+    .room-set:hover { transform: translateY(-6px); }
+    .room-set__image { aspect-ratio: 4/3; overflow: hidden; }
+    .room-set__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease-expo); }
+    .room-set:hover .room-set__image img { transform: scale(1.05); }
+    .room-set__info { padding: 1.5rem; }
+    .room-set__info h3 { font-family: var(--font-serif); font-size: 1.2rem; color: var(--walnut); margin-bottom: 0.25rem; }
+    .room-set__info p { font-size: 0.8rem; color: #6b5d52; margin-bottom: 0.75rem; }
+    .room-set__price { display: flex; align-items: center; gap: 0.75rem; }
+    .room-set__price .current { font-size: 1.1rem; font-weight: 500; color: var(--walnut); }
+    .room-set__price .bundle { font-size: 0.75rem; color: var(--moss); background: rgba(94,107,74,0.1); padding: 0.2rem 0.6rem; border-radius: 100px; }
+
+    /* 8. RECENTLY VIEWED / RECOMMENDED */
+    .recommended { padding: 6rem 0; background: var(--oat); }
+    .recommended-track { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 1rem; margin-top: 2rem; }
+    .recommended-track::-webkit-scrollbar { display: none; }
+    .recommended-track .product-card { flex: 0 0 260px; scroll-snap-align: start; }
+
+    /* 9. REASSURANCE STRIP */
+    .reassurance { padding: 3rem 0; background: var(--walnut); color: var(--oat); }
+    .reassurance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .reassurance-item h4 { font-family: var(--font-serif); font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--oat); }
+    .reassurance-item p { font-size: 0.8rem; color: rgba(243,237,228,0.65); line-height: 1.7; }
+
+    /* 10. FOOTER */
+    .site-footer { padding: 3rem 0 2rem; background: var(--paper); border-top: 1px solid rgba(74,52,38,0.08); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2rem; }
+    .footer-brand p { font-size: 0.8rem; color: #6b5d52; margin-top: 0.75rem; max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--walnut); margin-bottom: 1rem; font-weight: 600; }
+    .footer-col a { display: block; font-size: 0.8rem; color: #6b5d52; margin-bottom: 0.5rem; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--clay); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(74,52,38,0.08); font-size: 0.7rem; color: #9a8c82; flex-wrap: wrap; gap: 1rem; }
+
+    /* SWATCH DRAWER */
+    .swatch-drawer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: var(--walnut); color: var(--oat); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; transform: translateY(100%); transition: transform 0.6s var(--ease-expo); box-shadow: 0 -8px 40px rgba(0,0,0,0.3); flex-wrap: wrap; gap: 0.75rem; }
+    .swatch-drawer.is-visible { transform: translateY(0); }
+    .swatch-drawer__items { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+    .swatch-chip { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--oat); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+    .swatch-drawer__cta { background: var(--oat); color: var(--walnut); padding: 0.65rem 1.75rem; border-radius: 100px; font-weight: 600; font-size: 0.8rem; }
+    .swatch-drawer__close { color: var(--oat); font-size: 1.4rem; opacity: 0.6; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 900px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .editorial-break__inner { grid-template-columns: 1fr; gap: 0; }
+      .editorial-break__copy { padding: 2rem; }
+      .reassurance-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .header-nav { display: none; }
+      .quick-chips { display: none; }
+      .room-sets-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .collection-hero__inner { flex-direction: column; align-items: flex-start; }
+      .detail-facts { grid-template-columns: 1fr; }
+      .detail-pair__grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .filter-bar__inner { gap: 0.5rem; }
+      .filter-btn { font-size: 0.7rem; padding: 0.45rem 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="index.html" class="logo">Hearth <span>&</span> Grain</a>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="shop.html" class="is-active">Shop</a>
+      <a href="atelier.html">Atelier</a>
+      <a href="story.html">Story & Craft</a>
+      <a href="visit.html">Visit & Support</a>
+    </nav>
+    <div class="header-actions">
+      <button aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+      <button aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <button aria-label="Cart" style="position:relative;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count">0</span></button>
+    </div>
+  </header>
+
+  <!-- 1. COLLECTION HERO -->
+  <section class="collection-hero">
+    <div class="container">
+      <div class="collection-hero__inner">
+        <div>
+          <p class="section-label">The Shop</p>
+          <h1 class="section-heading" style="font-size: clamp(2.2rem, 5vw, 4rem);">Everything we make,<br>arranged by how you live.</h1>
+        </div>
+        <p>Filter by room, size, wood or fabric, and see delivery dates before you add anything to your cart. Small flat? Tick “Fits a narrow doorway” and we will hide anything that will not make the turn.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. SMART FILTER BAR -->
+  <div class="filter-bar" id="filterBar">
+    <div class="container">
+      <div class="filter-bar__inner">
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="room" onclick="toggleFilter(this)">Room <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="filter-dropdown" data-dropdown="room">
+            <label><input type="checkbox" value="Living" onchange="applyFilters()"> Living</label>
+            <label><input type="checkbox" value="Dining" onchange="applyFilters()"> Dining</label>
+            <label><input type="checkbox" value="Bedroom" onchange="applyFilters()"> Bedroom</label>
+            <label><input type="checkbox" value="Work & Play" onchange="applyFilters()"> Work & Play</label>
+            <label><input type="checkbox" value="Small Spaces" onchange="applyFilters()"> Small Spaces</label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="type" onclick="toggleFilter(this)">Type <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="filter-dropdown" data-dropdown="type">
+            <label><input type="checkbox" value="Sofa" onchange="applyFilters()"> Sofa</label>
+            <label><input type="checkbox" value="Table" onchange="applyFilters()"> Table</label>
+            <label><input type="checkbox" value="Chair" onchange="applyFilters()"> Chair</label>
+            <label><input type="checkbox" value="Bed" onchange="applyFilters()"> Bed</label>
+            <label><input type="checkbox" value="Storage" onchange="applyFilters()"> Storage</label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="material" onclick="toggleFilter(this)">Material <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="filter-dropdown" data-dropdown="material">
+            <label><input type="checkbox" value="Walnut" onchange="applyFilters()"> Walnut</label>
+            <label><input type="checkbox" value="Oak" onchange="applyFilters()"> Oak</label>
+            <label><input type="checkbox" value="Bouclé" onchange="applyFilters()"> Bouclé</label>
+            <label><input type="checkbox" value="Linen" onchange="applyFilters()"> Linen</label>
+            <label><input type="checkbox" value="Stone" onchange="applyFilters()"> Stone</label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="price" onclick="toggleFilter(this)">Price <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="filter-dropdown" data-dropdown="price">
+            <label><input type="checkbox" value="0-1000" onchange="applyFilters()"> Under $1,000</label>
+            <label><input type="checkbox" value="1000-2000" onchange="applyFilters()"> $1,000 – $2,000</label>
+            <label><input type="checkbox" value="2000-3000" onchange="applyFilters()"> $2,000 – $3,000</label>
+            <label><input type="checkbox" value="3000+" onchange="applyFilters()"> $3,000+</label>
+          </div>
+        </div>
+        <div class="quick-chips">
+          <button class="chip" data-quick="narrow" onclick="toggleQuick(this)">Fits a narrow doorway</button>
+          <button class="chip" data-quick="under2m" onclick="toggleQuick(this)">Under 2 m</button>
+          <button class="chip" data-quick="washable" onclick="toggleQuick(this)">Washable covers</button>
+          <button class="chip" data-quick="ships2w" onclick="toggleQuick(this)">Ships in 2 weeks</button>
+          <button class="chip" data-quick="walnut" onclick="toggleQuick(this)">Solid walnut</button>
+          <button class="chip" data-quick="pet" onclick="toggleQuick(this)">Pet-friendly fabrics</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. PRODUCT GRID -->
+  <section class="product-section">
+    <div class="container">
+      <div class="grid-header">
+        <span class="grid-header__count" id="resultCount">96 pieces</span>
+        <div class="grid-header__sort">
+          <label for="sortSelect">Sort by</label>
+          <select id="sortSelect" onchange="applyFilters()">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="name">Name</option>
+          </select>
+        </div>
+      </div>
+      <div class="product-grid" id="productGrid">
+        <!-- Products injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. PRODUCT DETAIL PANEL -->
+  <div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
+  <aside class="detail-panel" id="detailPanel">
+    <button class="detail-panel__close" onclick="closeDetail()">×</button>
+    <div id="detailContent">
+      <!-- Injected by JS -->
+    </div>
+  </aside>
+
+  <!-- 5. MATERIALS COMPARE -->
+  <section class="materials-compare">
+    <div class="container">
+      <p class="section-label">Not sure which fabric to choose?</p>
+      <h2 class="section-heading">Compare feel, durability,<br>stain resistance and care.</h2>
+      <p style="font-size:0.9rem; color:#5a4a3e; margin-top:0.75rem; max-width:560px;">Then add the ones you like to your swatch drawer.</p>
+      <div class="materials-table-wrap">
+        <table class="materials-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th><span class="material-swatch" style="background:#d4c9b8;"></span>Bouclé</th>
+              <th><span class="material-swatch" style="background:#7a6a5a;"></span>Velvet</th>
+              <th><span class="material-swatch" style="background:#c9cccf;"></span>Washed linen</th>
+              <th><span class="material-swatch" style="background:#5e6b4a;"></span>Performance weave</th>
+              <th><span class="material-swatch" style="background:#4a3426;"></span>Leather</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Feel</td><td>Looped, textural, cosy</td><td>Plush, soft, light-catching</td><td>Relaxed, breathable, lived-in</td><td>Smooth, slightly crisp</td><td>Firm, warm, patinas</td></tr>
+            <tr><td>Best for</td><td>Statement seating</td><td>Evening rooms</td><td>Everyday family use</td><td>High-traffic homes</td><td>Long-term investment</td></tr>
+            <tr><td>Pets & kids</td><td>Snag risk</td><td>Shows marks</td><td>Washable covers</td><td>Wipe-clean</td><td>Wipe-clean, scratches show</td></tr>
+            <tr><td>Care</td><td>Professional clean</td><td>Brush, low-heat vacuum</td><td>Machine wash cold</td><td>Spot clean, mild soap</td><td>Condition 2× yearly</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. ROOM SETS -->
+  <section class="room-sets">
+    <div class="container">
+      <p class="section-label">Furnish a whole room in one go</p>
+      <h2 class="section-heading">The living room set, the dining set,<br>and the bedroom set.</h2>
+      <div class="room-sets-grid">
+        <div class="room-set">
+          <div class="room-set__image"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=80&auto=format&fit=crop" alt="Living room set"></div>
+          <div class="room-set__info"><h3>The Living Room Set</h3><p>Soft Landing sofa, Stone & Timber coffee table, Chrome Notes floor lamp.</p><div class="room-set__price"><span class="current">$4,180</span><span class="bundle">Save $320</span></div></div>
+        </div>
+        <div class="room-set">
+          <div class="room-set__image"><img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80&auto=format&fit=crop" alt="Dining room set"></div>
+          <div class="room-set__info"><h3>The Dining Set</h3><p>Curve Dining Table, six Gather Stools, Chrome Notes Pendant.</p><div class="room-set__price"><span class="current">$3,640</span><span class="bundle">Save $280</span></div></div>
+        </div>
+        <div class="room-set">
+          <div class="room-set__image"><img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80&auto=format&fit=crop" alt="Bedroom set"></div>
+          <div class="room-set__info"><h3>The Bedroom Set</h3><p>Rest Platform Bed, two walnut bedside tables, Rest Bench.</p><div class="room-set__price"><span class="current">$3,120</span><span class="bundle">Save $240</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. RECENTLY VIEWED / RECOMMENDED -->
+  <section class="recommended">
+    <div class="container">
+      <p class="section-label">Still thinking about these?</p>
+      <h2 class="section-heading">Come back to the pieces<br>you looked at.</h2>
+      <div class="recommended-track" id="recommendedTrack"></div>
+    </div>
+  </section>
+
+  <!-- 8. REASSURANCE STRIP -->
+  <section class="reassurance">
+    <div class="container">
+      <div class="reassurance-grid">
+        <div class="reassurance-item"><h4>Delivery</h4><p>We show your delivery date before you pay, and message you at every step. No surprise fees, no vague windows.</p></div>
+        <div class="reassurance-item"><h4>Swatches</h4><p>Feel the fabric before you commit. Your first swatches are on us, sent in a small box with care notes.</p></div>
+        <div class="reassurance-item"><h4>Returns</h4><p>Changed your mind? Our returns promise is explained in plain words, on one page. No asterisks.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">Hearth <span>&</span> Grain</div><p>Furniture for homes that are lived in. Warm woods, deep seating, honest materials.</p></div>
+        <div class="footer-col"><h4>Shop</h4><a href="#">Living</a><a href="#">Dining</a><a href="#">Bedroom</a><a href="#">Work & Play</a></div>
+        <div class="footer-col"><h4>Atelier</h4><a href="#">Configurator</a><a href="#">Room Planner</a><a href="#">Style Quiz</a><a href="#">Book a Consult</a></div>
+        <div class="footer-col"><h4>Support</h4><a href="#">Delivery & Returns</a><a href="#">Care & Repair</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Hearth & Grain.</span><span>WCAG 2.2 AA · Carbon-neutral shipping</span></div>
+    </div>
+  </footer>
+
+  <!-- SWATCH DRAWER -->
+  <div class="swatch-drawer" id="swatchDrawer">
+    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;"><span style="font-size:0.75rem; opacity:0.7;">Your swatch drawer</span><div class="swatch-drawer__items" id="swatchItems"></div></div>
+    <div style="display:flex; align-items:center; gap:1rem;"><button class="swatch-drawer__cta" onclick="alert('Swatch kit request — wire to fulfilment.')">Order free swatches →</button><button class="swatch-drawer__close" id="swatchClose" aria-label="Close">×</button></div>
+  </div>
+
+  <script>
+    // ============ DATA (same 96 products from Page 1) ============
+    const COLLECTIONS = ['The Soft Landing','The Curve Table Series','Gather','Stone & Timber','The One Chair','Rest','Shift','Chrome Notes'];
+    const IMG = {
+      sofa: ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=80&auto=format&fit=crop'],
+      table: ['https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=600&q=80&auto=format&fit=crop'],
+      chair: ['https://images.unsplash.com/photo-1592078615290-033ee584e267?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&q=80&auto=format&fit=crop'],
+      bed: ['https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&q=80&auto=format&fit=crop'],
+      storage: ['https://images.unsplash.com/photo-1593476550610-87baa860004a?w=600&q=80&auto=format&fit=crop','https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&q=80&auto=format&fit=crop']
+    };
+    const IMG_MAP = {'The Soft Landing':IMG.sofa,'The Curve Table Series':IMG.table,'Gather':IMG.table,'Stone & Timber':IMG.table,'The One Chair':IMG.chair,'Rest':IMG.bed,'Shift':IMG.storage,'Chrome Notes':IMG.chair};
+    const PRICE_RANGE = {'The Soft Landing':[1980,4800],'The Curve Table Series':[1200,3600],'Gather':[980,2800],'Stone & Timber':[680,2200],'The One Chair':[980,2400],'Rest':[880,3200],'Shift':[480,1800],'Chrome Notes':[280,980]};
+    const NAMES = {
+      'The Soft Landing':['Soft Landing Sofa','Soft Landing Loveseat','Soft Landing Chair','Soft Landing Chaise','Soft Landing Ottoman','Soft Landing Corner','Soft Landing Daybed','Soft Landing Slouch','Soft Landing Modular 3-Seat','Soft Landing Modular 4-Seat','Soft Landing Bench','Soft Landing Accent'],
+      'The Curve Table Series':['Curve Dining Table','Curve Coffee Table','Curve Side Table','Curve Console','Curve Burl Table','Curve Round Table','Curve Pedestal Table','Curve Extending Table','Curve Bar Table','Curve Desk','Curve Nesting Table','Curve Entry Table'],
+      'Gather':['Gather Game Table','Gather Card Table','Gather Dining Table','Gather Stool','Gather Bench','Gather Chess Top','Gather Felt Top','Gather Low Table','Gather Counter Table','Gather Pub Table','Gather Puzzle Table','Gather Social Table'],
+      'Stone & Timber':['Stone & Timber Coffee Table','Stone & Timber Side Table','Stone & Timber Plinth','Stone & Timber Console','Stone & Timber End Table','Stone & Timber Pedestal','Stone & Timber Drum','Stone & Timber Slab Table','Stone & Timber Nest','Stone & Timber Low Table','Stone & Timber Entry','Stone & Timber Stool'],
+      'The One Chair':['The One Chair — Moss','The One Chair — Rust','The One Chair — Oxblood','The One Chair — Aubergine','The One Chair — Bouclé','The One Chair — Velvet','The One Chair — Linen','The One Chair — Leather','The One Chair — Sculptural','The One Chair — Limited','The One Chair — Accent','The One Chair — Lounge'],
+      'Rest':['Rest Platform Bed','Rest Daybed','Rest Curved Headboard','Rest Bench','Rest Bedside Table','Rest Upholstered Bed','Rest Canopy Bed','Rest Low Bed','Rest Storage Bed','Rest Bench Long','Rest Nightstand','Rest Dresser'],
+      'Shift':['Shift Sofa Bed','Shift Nesting Table','Shift Fold-Flat Desk','Shift Storage Ottoman','Shift Modular Shelf','Shift Wall Desk','Shift Console','Shift Cube','Shift Bench','Shift Media Unit','Shift Room Divider','Shift Rolling Cart'],
+      'Chrome Notes':['Chrome Floor Lamp','Chrome Side Chair','Chrome Mirror','Chrome Table Lamp','Chrome Pendant','Chrome Bar Stool','Chrome Console','Chrome Wall Sconce','Chrome Coffee Table','Chrome Shelf','Chrome Coat Rack','Chrome Candleholder']
+    };
+    const COLOR_SETS = [['#d4c9b8','#7a6a5a','#5e6b4a','#b5654a'],['#4a3426','#c9cccf','#6b2a2f','#b5654a'],['#5e6b4a','#d4c9b8','#7a6a5a','#4a3426'],['#b5654a','#6b2a2f','#4a3426','#5e6b4a']];
+    const PRODUCTS = [];
+    COLLECTIONS.forEach((col, ci) => {
+      const names = NAMES[col], imgs = IMG_MAP[col], [minP, maxP] = PRICE_RANGE[col];
+      for (let i = 0; i < 12; i++) {
+        const price = Math.round(minP + (maxP - minP) * (i / 11) / 10) * 10;
+        const roomMap = { 'The Soft Landing':'Living','The Curve Table Series':'Dining','Gather':'Dining','Stone & Timber':'Living','The One Chair':'Living','Rest':'Bedroom','Shift':'Small Spaces','Chrome Notes':'Living' };
+        const typeMap = { 'The Soft Landing':'Sofa','The Curve Table Series':'Table','Gather':'Table','Stone & Timber':'Table','The One Chair':'Chair','Rest':'Bed','Shift':'Storage','Chrome Notes':'Chair' };
+        const materialMap = { 'The Soft Landing':'Bouclé','The Curve Table Series':'Walnut','Gather':'Walnut','Stone & Timber':'Stone','The One Chair':'Linen','Rest':'Oak','Shift':'Oak','Chrome Notes':'Walnut' };
+        PRODUCTS.push({
+          id: ci*12+i, name: names[i], collection: col, price, image: imgs[i % imgs.length],
+          colors: COLOR_SETS[(ci+i)%4], badge: i===0?'Best Seller':(i<3?'New':null),
+          room: roomMap[col], type: typeMap[col], material: materialMap[col],
+          ships: i % 3 === 0 ? 'Ships in 2 weeks' : 'Made to order · 6–8 weeks',
+          narrow: i % 4 !== 0, under2m: price < 2500, washable: col === 'The Soft Landing', pet: col === 'The Soft Landing' || col === 'Shift'
+        });
+      }
+    });
+
+    // ============ STATE ============
+    let activeFilters = { room: [], type: [], material: [], price: [] };
+    let activeQuick = [];
+
+    // ============ RENDER GRID ============
+    const grid = document.getElementById('productGrid');
+    const countEl = document.getElementById('resultCount');
+
+    function getFiltered() {
+      let list = [...PRODUCTS];
+      // Room
+      if (activeFilters.room.length) list = list.filter(p => activeFilters.room.includes(p.room));
+      // Type
+      if (activeFilters.type.length) list = list.filter(p => activeFilters.type.includes(p.type));
+      // Material
+      if (activeFilters.material.length) list = list.filter(p => activeFilters.material.includes(p.material));
+      // Price
+      if (activeFilters.price.length) {
+        list = list.filter(p => {
+          return activeFilters.price.some(range => {
+            if (range === '0-1000') return p.price < 1000;
+            if (range === '1000-2000') return p.price >= 1000 && p.price < 2000;
+            if (range === '2000-3000') return p.price >= 2000 && p.price < 3000;
+            if (range === '3000+') return p.price >= 3000;
+            return true;
+          });
+        });
+      }
+      // Quick chips
+      activeQuick.forEach(q => {
+        if (q === 'narrow') list = list.filter(p => p.narrow);
+        if (q === 'under2m') list = list.filter(p => p.under2m);
+        if (q === 'washable') list = list.filter(p => p.washable);
+        if (q === 'ships2w') list = list.filter(p => p.ships.includes('2 weeks'));
+        if (q === 'walnut') list = list.filter(p => p.material === 'Walnut');
+        if (q === 'pet') list = list.filter(p => p.pet);
+      });
+      // Sort
+      const sort = document.getElementById('sortSelect').value;
+      if (sort === 'price-asc') list.sort((a,b) => a.price - b.price);
+      if (sort === 'price-desc') list.sort((a,b) => b.price - a.price);
+      if (sort === 'name') list.sort((a,b) => a.name.localeCompare(b.name));
+      return list;
+    }
+
+    function renderGrid() {
+      const filtered = getFiltered();
+      countEl.textContent = `${filtered.length} piece${filtered.length !== 1 ? 's' : ''}`;
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty-state"><h3>Nothing matches yet.</h3><p>Loosen a filter, or tell us what you are after and a designer will help.</p><button class="btn btn-outline" style="margin-top:1rem;" onclick="resetFilters()">Clear all filters</button></div>`;
+        return;
+      }
+      grid.innerHTML = filtered.map(p => `
+        <div class="product-card" onclick="openDetail(${p.id})">
+          <div class="product-card__image">
+            <img src="${p.image}" alt="${p.name}" loading="lazy">
+            ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ''}
+            <button class="product-card__wish" onclick="event.stopPropagation(); this.classList.toggle('is-active')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <div class="product-card__swatch">${p.colors.map(c => `<span style="background:${c};"></span>`).join('')}</div>
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__collection">${p.collection}</div>
+            <div class="product-card__name">${p.name}</div>
+            <div class="product-card__price">From $${p.price.toLocaleString()}</div>
+            <div class="product-card__meta">${p.ships}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ============ FILTERS ============
+    function toggleFilter(btn) {
+      const dropdown = btn.nextElementSibling;
+      const isOpen = dropdown.classList.contains('is-open');
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('is-open'));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+      if (!isOpen) { dropdown.classList.add('is-open'); btn.classList.add('is-active'); }
+    }
+
+    function applyFilters() {
+      activeFilters = { room: [], type: [], material: [], price: [] };
+      document.querySelectorAll('.filter-dropdown input:checked').forEach(cb => {
+        const dropdown = cb.closest('.filter-dropdown');
+        const key = dropdown.dataset.dropdown;
+        if (activeFilters[key]) activeFilters[key].push(cb.value);
+      });
+      renderGrid();
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('is-open'));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+    }
+
+    function toggleQuick(btn) {
+      const key = btn.dataset.quick;
+      if (activeQuick.includes(key)) {
+        activeQuick = activeQuick.filter(k => k !== key);
+        btn.classList.remove('is-active');
+      } else {
+        activeQuick.push(key);
+        btn.classList.add('is-active');
+      }
+      renderGrid();
+    }
+
+    function resetFilters() {
+      activeFilters = { room: [], type: [], material: [], price: [] };
+      activeQuick = [];
+      document.querySelectorAll('.filter-dropdown input').forEach(cb => cb.checked = false);
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('is-active'));
+      renderGrid();
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.filter-group')) {
+        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('is-open'));
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+      }
+    });
+
+    // ============ DETAIL PANEL ============
+    function openDetail(id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+      const panel = document.getElementById('detailPanel');
+      const overlay = document.getElementById('detailOverlay');
+      const content = document.getElementById('detailContent');
+      const pairIds = PRODUCTS.filter(x => x.collection !== p.collection && x.price < p.price).slice(0, 3);
+      content.innerHTML = `
+        <div class="detail-gallery">
+          <img src="${p.image}" alt="${p.name}">
+          <span class="detail-gallery__badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg> 360° · AR view available</span>
+        </div>
+        <div class="detail-body">
+          <div class="detail-body__collection">${p.collection}</div>
+          <h2>${p.name}</h2>
+          <div class="detail-body__price">From $${p.price.toLocaleString()}</div>
+          <div class="detail-facts">
+            <div class="detail-fact"><div class="detail-fact__label">Dimensions</div><div class="detail-fact__value">220 × 95 × 72 cm</div></div>
+            <div class="detail-fact"><div class="detail-fact__label">Doorway fit</div><div class="detail-fact__value">${p.narrow ? 'Fits a narrow doorway' : 'Check doorway width'}</div></div>
+            <div class="detail-fact"><div class="detail-fact__label">Material</div><div class="detail-fact__value">${p.material}</div></div>
+            <div class="detail-fact"><div class="detail-fact__label">Lead time</div><div class="detail-fact__value">${p.ships}</div></div>
+          </div>
+          <div class="detail-options">
+            <div class="detail-options__label">Cover / finish</div>
+            <div class="detail-options__pills">
+              ${p.colors.map((c, i) => `<span class="detail-pill ${i===0?'is-active':''}" onclick="this.parentElement.querySelectorAll('.detail-pill').forEach(x=>x.classList.remove('is-active'));this.classList.add('is-active')">${['Bouclé','Velvet','Linen','Performance'][i] || 'Finish '+(i+1)}</span>`).join('')}
+            </div>
+          </div>
+          <div class="detail-delivery">
+            <div class="detail-delivery__label">Check delivery to your postcode</div>
+            <div class="detail-delivery__form">
+              <input type="text" placeholder="e.g. 11201" id="postcodeInput">
+              <button onclick="document.getElementById('postcodeInput').value='';alert('Delivery estimate: 12–18 Feb · $0 white-glove')">Check</button>
+            </div>
+          </div>
+          <div class="detail-care">
+            <strong>Care notes:</strong> ${p.washable ? 'Removable covers, machine wash cold. Vacuum weekly with a soft brush.' : 'Spot clean with mild soap. Avoid direct sunlight. Condition wood 2× yearly.'}
+          </div>
+          <div class="detail-reviews">
+            <div class="detail-reviews__header"><span class="detail-reviews__stars">★★★★★</span><span style="font-size:0.8rem;color:#6b5d52;">4.9 · 38 verified reviews</span></div>
+            <div class="detail-review">"The size was exactly as described. The delivery team checked the doorway first." — Verified buyer</div>
+            <div class="detail-review">"Fabric swatches arrived in two days. Made the decision easy." — Verified buyer</div>
+          </div>
+          <div class="detail-pair">
+            <div class="detail-options__label">Pair it with</div>
+            <div class="detail-pair__grid">
+              ${pairIds.map(pp => `<div class="detail-pair__item" onclick="closeDetail();setTimeout(()=>openDetail(${pp.id}),400)"><img src="${pp.image}" alt="${pp.name}"><span>${pp.name}</span></div>`).join('')}
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="btn btn-primary" onclick="alert('Added ${p.name.replace(/'/g,"\\'")} — $${p.price}')">Add to cart · $${p.price.toLocaleString()}</button>
+            <button class="btn btn-outline" onclick="addSwatch('${p.name.replace(/'/g,"\\'")}','${p.colors[0]}')">Order free swatches</button>
+            <p class="detail-reassurance">Not sure? Order free swatches, or book a 15-minute call with a designer.</p>
+          </div>
+        </div>
+      `;
+      overlay.classList.add('is-open');
+      panel.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetail() {
+      document.getElementById('detailOverlay').classList.remove('is-open');
+      document.getElementById('detailPanel').classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    // ============ RECOMMENDED ============
+    const recTrack = document.getElementById('recommendedTrack');
+    const recProducts = PRODUCTS.filter(p => p.badge).slice(0, 8);
+    recTrack.innerHTML = recProducts.map(p => `
+      <div class="product-card" onclick="openDetail(${p.id})">
+        <div class="product-card__image"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>
+        <div class="product-card__info"><div class="product-card__collection">${p.collection}</div><div class="product-card__name">${p.name}</div><div class="product-card__price">From $${p.price.toLocaleString()}</div></div>
+      </div>
+    `).join('');
+
+    // ============ SWATCH DRAWER ============
+    const drawer = document.getElementById('swatchDrawer'), items = document.getElementById('swatchItems');
+    let swatches = [];
+    function addSwatch(name, color) {
+      if (swatches.length >= 6) { alert('Maximum 6 swatches.'); return; }
+      if (swatches.find(s => s.name===name && s.color===color)) return;
+      swatches.push({name,color}); renderSwatches(); drawer.classList.add('is-visible');
+    }
+    function renderSwatches() {
+      items.innerHTML = swatches.map((s,i) => `<div class="swatch-chip" style="background:${s.color}; color:${isLight(s.color)?'#1E1A17':'#F3EDE4'};" title="${s.name}" onclick="removeSwatch(${i})">${s.name.slice(0,2)}</div>`).join('');
+    }
+    function removeSwatch(i) { swatches.splice(i,1); renderSwatches(); if(!swatches.length) drawer.classList.remove('is-visible'); }
+    function isLight(hex) { const c=hex.replace('#',''); const r=parseInt(c.substr(0,2),16), g=parseInt(c.substr(2,2),16), b=parseInt(c.substr(4,2),16); return (r*299+g*587+b*114)/1000>128; }
+    document.getElementById('swatchClose').addEventListener('click', () => drawer.classList.remove('is-visible'));
+
+    // ============ INIT ============
+    renderGrid();
+    console.log('Hearth & Grain — Shop page loaded. 96 products, filters active.');
+  </script>
+</body>
+</html>
